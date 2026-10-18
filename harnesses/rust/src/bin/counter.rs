@@ -1,6 +1,7 @@
 use std::{hint::black_box, time::Instant};
 
-use qortoo::{Client, Counter, Datatype, LocalConnectivity};
+use qortoo::{Client, Counter, Datatype};
+use qortoo_bench_sdk::{Execution, new_client};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
@@ -12,18 +13,6 @@ struct Contract {
     max_counters_per_client: u64,
     execution: Execution,
     scenarios: Vec<Scenario>,
-}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct Execution {
-    realtime: bool,
-    handler_registered: bool,
-    measurement_threads: u32,
-    warmup_rounds: u32,
-    measured_rounds: u32,
-    smoke_warmup_rounds: u32,
-    smoke_rounds: u32,
 }
 
 #[derive(Deserialize)]
@@ -67,15 +56,6 @@ struct Sample {
     ns_per_op: f64,
     stats: Stats,
     chunks: Vec<Chunk>,
-}
-
-fn new_client() -> Client {
-    let connectivity = LocalConnectivity::new_arc();
-    connectivity.set_realtime(false);
-    Client::builder("bench-collection", "bench-counter")
-        .with_connectivity(connectivity)
-        .build()
-        .expect("client must build")
 }
 
 fn new_counter(client: &Client, key: &str) -> Counter {

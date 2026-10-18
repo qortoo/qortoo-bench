@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "id": "variable/v1",
+  "transaction_operations": 10,
+  "max_payload_bytes_per_chunk": 262144,
+  "execution": {
+    "realtime": false,
+    "handler_registered": false,
+    "measurement_threads": 1,
+    "warmup_rounds": 1,
+    "measured_rounds": 10,
+    "smoke_warmup_rounds": 0,
+    "smoke_rounds": 1
+  },
+  "payloads": [
+    {
+      "id": "64B",
+      "json_bytes": 64
+    },
+    {
+      "id": "1024B",
+      "json_bytes": 1024
+    },
+    {
+      "id": "16384B",
+      "json_bytes": 16384
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "Set-64B",
+      "operation": "Set",
+      "payload": "64B",
+      "budget": 4000,
+      "smoke_budget": 1001,
+      "reset_every": 1000
+    },
+    {
+      "id": "Get-64B",
+      "operation": "Get",
+      "payload": "64B",
+      "budget": 100000,
+      "smoke_budget": 100,
+      "reset_every": null
+    },
+    {
+      "id": "Transaction-64B",
+      "operation": "Transaction",
+      "payload": "64B",
+      "budget": 400,
+      "smoke_budget": 101,
+      "reset_every": 100
+    },
+    {
+      "id": "SyncLocal-64B",
+      "operation": "SyncLocal",
+      "payload": "64B",
+      "budget": 4000,
+      "smoke_budget": 1001,
+      "reset_every": 1000
+    },
+    {
+      "id": "Set-1024B",
+      "operation": "Set",
+      "payload": "1024B",
+      "budget": 400,
+      "smoke_budget": 101,
+      "reset_every": 100
+    },
+    {
+      "id": "Get-1024B",
+      "operation": "Get",
+      "payload": "1024B",
+      "budget": 20000,
+      "smoke_budget": 100,
+      "reset_every": null
+    },
+    {
+      "id": "Transaction-1024B",
+      "operation": "Transaction",
+      "payload": "1024B",
+      "budget": 40,
+      "smoke_budget": 11,
+      "reset_every": 10
+    },
+    {
+      "id": "SyncLocal-1024B",
+      "operation": "SyncLocal",
+      "payload": "1024B",
+      "budget": 400,
+      "smoke_budget": 101,
+      "reset_every": 100
+    },
+    {
+      "id": "Set-16384B",
+      "operation": "Set",
+      "payload": "16384B",
+      "budget": 40,
+      "smoke_budget": 11,
+      "reset_every": 10
+    },
+    {
+      "id": "Get-16384B",
+      "operation": "Get",
+      "payload": "16384B",
+      "budget": 2000,
+      "smoke_budget": 100,
+      "reset_every": null
+    },
+    {
+      "id": "Transaction-16384B",
+      "operation": "Transaction",
+      "payload": "16384B",
+      "budget": 4,
+      "smoke_budget": 2,
+      "reset_every": 1
+    },
+    {
+      "id": "SyncLocal-16384B",
+      "operation": "SyncLocal",
+      "payload": "16384B",
+      "budget": 40,
+      "smoke_budget": 11,
+      "reset_every": 10
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate all Counter workloads against pinned SDKs and a shared contract."""
+"""Validate registered SDK suites against pinned sources and shared contracts."""
 
 import argparse
 from datetime import datetime, timezone
@@ -10,9 +10,10 @@ from pathlib import Path
 import platform
 import shutil
 import subprocess
+import sys
 import uuid
 
-from counter_contract import load_suite, validate_sample
+from suite_registry import VALIDATORS, load_suite
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,10 +44,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--go", default="go", help="Go executable matching sources.lock.json")
     parser.add_argument("--source-root", type=Path, help="directory containing local qortoo-rs/qortoo-go repositories")
+    parser.add_argument("--suite", action="append", choices=sorted(VALIDATORS), help="suite to validate; repeat to select several (default: all)")
     args = parser.parse_args()
     lock = json.loads((ROOT / "sources.lock.json").read_text())
-    suite, contract, contract_path = load_suite(ROOT, lock)
-    input_paths = [ROOT / "sources.lock.json", ROOT / "components.json", ROOT / "suites/counter.json", contract_path]
+    names = list(dict.fromkeys(args.suite or sorted(VALIDATORS)))
+    resolved = [load_suite(ROOT, lock, name) for name in names]
+    input_paths = [ROOT / "sources.lock.json", ROOT / "components.json"]
+    for suite, contract, contract_path in resolved:
+        input_paths.extend([ROOT / f"suites/{suite['id']}.json", contract_path])
     input_hashes = {str(p.relative_to(ROOT)): checksum(p) for p in input_paths}
     env = os.environ.copy()
     for key in ("CARGO_TARGET_DIR", "CARGO_BUILD_TARGET", "RUSTFLAGS", "CGO_CFLAGS", "CGO_LDFLAGS", "GOFLAGS"):
@@ -66,15 +71,15 @@ def main():
     output = ROOT / "results" / f"{stamp}-{uuid.uuid4().hex[:8]}"
     output.mkdir(parents=True)
     metadata = {
-        "schema_version": 2, "status": "running", "performance_baseline": False,
-        "suite": suite["id"], "profile": "smoke", "contract_id": contract["id"],
+        "schema_version": 3, "status": "running", "performance_baseline": False,
+        "suite_ids": names, "profile": "smoke",
         "input_files_sha256": input_hashes, "sources": lock["sources"],
-        "profile": lock["profile"], "rust_features": lock["rust_features"],
+        "build_profile": lock["profile"], "rust_features": lock["rust_features"],
         "rustc": rust_version, "go": go_version, "platform": platform.platform(),
         "started_at_utc": stamp, "commands": [],
     }
     inputs = {
-        "schema_version": 1, "suite": suite, "contract": contract,
+        "schema_version": 2, "suites": [{"suite": suite, "contract": contract} for suite, contract, _ in resolved],
         "sources": lock["sources"], "toolchains": lock["toolchains"],
         "profile": "smoke", "build_profile": lock["profile"],
         "rust_features": lock["rust_features"], "input_files_sha256": input_hashes,
@@ -90,6 +95,7 @@ def main():
             subprocess.run(command, cwd=cwd, env=env, stdout=stdout, stderr=stderr, check=True)
 
     try:
+        run("contract-tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
         for name, source in lock["sources"].items():
             path = ROOT / "_sources" / name
             if not path.exists():
@@ -117,32 +123,37 @@ def main():
         }
         env.update(CGO_CFLAGS=f"-I{sdk}/include", CGO_LDFLAGS=f"-L{sdk}/lib")
 
-        rust_harness = ROOT / suite["implementations"]["rust"]["harness"]
-        if not (rust_harness / "Cargo.lock").exists():
-            # Seed from the SDK lock to keep shared dependency versions aligned.
-            shutil.copyfile(rust / "Cargo.lock", rust_harness / "Cargo.lock")
-            run("rust-resolve", ["cargo", "metadata", "--offline", "--format-version", "1"], rust_harness)
-        run("rust-build", ["cargo", "build", "--release", "--locked"], rust_harness)
-        go_harness = ROOT / suite["implementations"]["go"]["harness"]
-        # External C libraries do not invalidate Go's build cache.
-        run("go-boundary-tests", [go, "test", "-a", "-count=1", "-mod=readonly", "-v", "."], go_harness)
-        go_binary = output / "counter-go"
-        run("go-build", [go, "build", "-a", "-mod=readonly", "-trimpath", "-o", str(go_binary), "."], go_harness)
-        binaries = {"rust": rust_harness / "target/release/counter", "go": go_binary}
-        for scenario in contract["scenarios"]:
-            for implementation, binary in binaries.items():
-                label = f"{implementation}-smoke-{scenario['id']}"
-                run(label, [str(binary), str(contract_path), "smoke", scenario["id"]])
-                sample = json.loads((output / f"{label}.stdout.log").read_text())
-                validate_sample(sample, contract, scenario, implementation, "smoke")
-                samples.append(sample)
+        binaries = {}
+        rust_adapters = {(suite["implementations"]["rust"]["harness"], suite["implementations"]["rust"]["executable"]) for suite, _, _ in resolved}
+        for directory in sorted({directory for directory, _ in rust_adapters}):
+            harness = ROOT / directory
+            run("rust-build", ["cargo", "build", "--release", "--locked", "--bins"], harness)
+        for directory, executable in rust_adapters:
+            binaries[("rust", directory, executable)] = ROOT / directory / "target/release" / executable
+        go_adapters = {(suite["implementations"]["go"]["harness"], suite["implementations"]["go"]["executable"]) for suite, _, _ in resolved}
+        for directory, executable in sorted(go_adapters):
+            harness = ROOT / directory
+            run(f"go-tests-{executable}", [go, "test", "-a", "-count=1", "-mod=readonly", "-v", "."], harness)
+            binary = output / f"{executable}-go"
+            # External C libraries do not invalidate Go's build cache.
+            run(f"go-build-{executable}", [go, "build", "-a", "-mod=readonly", "-trimpath", "-o", str(binary), "."], harness)
+            binaries[("go", directory, executable)] = binary
+        for suite, contract, contract_path in resolved:
+            for scenario in contract["scenarios"]:
+                for implementation, adapter in suite["implementations"].items():
+                    binary = binaries[(implementation, adapter["harness"], adapter["executable"])]
+                    label = f"{suite['id']}-{implementation}-smoke-{scenario['id']}"
+                    run(label, [str(binary), str(contract_path), "smoke", scenario["id"]])
+                    sample = json.loads((output / f"{label}.stdout.log").read_text())
+                    VALIDATORS[suite["id"]].validate_sample(sample, contract, scenario, implementation, "smoke")
+                    samples.append(sample)
         for name, source in lock["sources"].items():
             validate_source(ROOT / "_sources" / name, source["sha"])
         for path in input_paths:
             if checksum(path) != input_hashes[str(path.relative_to(ROOT))]:
                 raise RuntimeError(f"input changed during execution: {path}")
         metadata["status"] = "passed"
-        print("Counter smoke passed: 5 scenarios x 2 implementations; performance baseline: false", flush=True)
+        print(f"Suite smoke passed: {len(samples)} validated samples across {names}; performance baseline: false", flush=True)
     except Exception as error:
         metadata.update(status="failed", error=str(error))
         raise

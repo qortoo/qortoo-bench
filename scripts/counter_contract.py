@@ -1,51 +1,19 @@
 """Validate the Counter suite and its per-round workload evidence."""
 
-import json
 import math
 
+from contract_support import positive, require
 
 SCENARIOS = {"IncreaseBy", "GetValue", "Transaction", "SyncLocal", "BuildCounter"}
 MUTATING = {"IncreaseBy", "Transaction", "SyncLocal"}
 
 
-def require(condition, message):
-    if not condition:
-        raise ValueError(message)
-
-
-def positive(value):
-    return type(value) is int and value > 0
-
-
 def load_suite(root, lock):
-    require(lock["profile"] == "release" and lock["rust_features"] == ["observability"], "unsupported SDK build configuration")
-    components = json.loads((root / "components.json").read_text())
-    suite = json.loads((root / "suites/counter.json").read_text())
-    require(components["schema_version"] == suite["schema_version"] == 1, "unsupported component/suite schema")
-    registry = components["components"]
+    from suite_registry import load_suite as load
+    return load(root, lock, "counter")
 
-    def dependencies(name, ancestors=()):
-        require(name in registry, f"unknown component: {name}")
-        require(name not in ancestors, "component dependency cycle")
-        item = registry[name]
-        require(item["source"] in lock["sources"], f"missing source for {name}")
-        resolved = {name}
-        for dependency in item["depends_on"]:
-            resolved.update(dependencies(dependency, ancestors + (name,)))
-        return resolved
 
-    for name in registry:
-        dependencies(name)
-    require(suite["id"] == "counter", "unsupported suite")
-    require(set(suite["implementations"]) == {"rust", "go"}, "Counter requires Rust and Go adapters")
-    for implementation, adapter in suite["implementations"].items():
-        dependencies(adapter["component"])
-        require(registry[adapter["component"]]["source"] == implementation, "adapter/source mismatch")
-        require((root / adapter["harness"]).is_dir(), "missing harness directory")
-    require(suite["implementations"]["rust"]["component"] in dependencies(suite["implementations"]["go"]["component"]), "Go adapter must depend on the Rust SDK")
-    require(suite["metric"] == {"id": "latency", "unit": "ns/op", "direction": "smaller"}, "unsupported Counter metric")
-    path = root / suite["contract"]
-    contract = json.loads(path.read_text())
+def validate_contract(contract):
     require(set(contract) == {"schema_version", "id", "transaction_operations", "max_counters_per_client", "execution", "scenarios"}, "unknown/missing contract field")
     require(contract["schema_version"] == 1 and contract["id"] == "counter/v1", "unsupported Counter contract")
     require(positive(contract["transaction_operations"]), "invalid transaction size")
@@ -73,7 +41,6 @@ def load_suite(root, lock):
             require(scenario["reset_every"] is None, "read/build scenarios cannot reset")
         if scenario["id"] == "BuildCounter":
             require(scenario["budget"] <= contract["max_counters_per_client"], "BuildCounter exceeds client capacity")
-    return suite, contract, path
 
 
 def validate_sample(sample, contract, scenario, implementation, profile):

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "variable",
+  "contract": "contracts/variable.json",
+  "implementations": {
+    "rust": {
+      "component": "rust-sdk",
+      "harness": "harnesses/rust",
+      "executable": "variable"
+    },
+    "go": {
+      "component": "go-sdk",
+      "harness": "harnesses/go",
+      "executable": "sdk"
+    }
+  },
+  "metric": {
+    "id": "latency",
+    "unit": "ns/op",
+    "direction": "smaller"
+  }
+}

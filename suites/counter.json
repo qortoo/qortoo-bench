@@ -3,8 +3,20 @@
   "id": "counter",
   "contract": "contracts/counter.json",
   "implementations": {
-    "rust": {"component": "rust-sdk", "harness": "harnesses/rust"},
-    "go": {"component": "go-sdk", "harness": "harnesses/go"}
+    "rust": {
+      "component": "rust-sdk",
+      "harness": "harnesses/rust",
+      "executable": "counter"
+    },
+    "go": {
+      "component": "go-sdk",
+      "harness": "harnesses/go",
+      "executable": "sdk"
+    }
   },
-  "metric": {"id": "latency", "unit": "ns/op", "direction": "smaller"}
+  "metric": {
+    "id": "latency",
+    "unit": "ns/op",
+    "direction": "smaller"
+  }
 }

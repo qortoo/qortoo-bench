@@ -99,13 +99,15 @@ The Rust client owns its connectivity and is dropped after its counters.
 
 ## Code map
 
-- [`harnesses/rust/src/main.rs`](../harnesses/rust/src/main.rs) and
-  [`harnesses/go/main.go`](../harnesses/go/main.go): per-round workloads and timers.
-- [`harnesses/go/main_test.go`](../harnesses/go/main_test.go): exact-boundary and
+- [`harnesses/rust/src/bin/counter.rs`](../harnesses/rust/src/bin/counter.rs) and
+  [`harnesses/go/counter.go`](../harnesses/go/counter.go): per-round workloads and timers.
+- [`harnesses/go/counter_test.go`](../harnesses/go/counter_test.go): exact-boundary and
   boundary-plus-one value/release behavior for mutable scenarios.
-- [`scripts/counter_contract.py`](../scripts/counter_contract.py): suite input and
-  independent sample validation.
+- [`scripts/counter_contract.py`](../scripts/counter_contract.py): Counter contract
+  and independent sample validation.
+- [`scripts/suite_registry.py`](../scripts/suite_registry.py): shared suite/component input validation.
 - [`scripts/smoke.py`](../scripts/smoke.py): pinned SDK preparation, compilation,
   one-round execution, and evidence preservation.
 
-See [Results](results.md) for source manifests and result interpretation.
+See [Variable measurement](variable-measurement.md) for typed JSON workloads and
+[Results](results.md) for source manifests and result interpretation.

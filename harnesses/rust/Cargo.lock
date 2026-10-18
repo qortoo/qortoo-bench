@@ -980,7 +980,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "qortoo-bench-counter"
+name = "qortoo-bench-sdk"
 version = "0.1.0"
 dependencies = [
  "qortoo",
