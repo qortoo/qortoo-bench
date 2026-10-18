@@ -78,3 +78,12 @@ full measurement produces comparative performance data on a controlled host.
 
 See [Counter measurement](docs/counter-measurement.md), [Variable measurement](docs/variable-measurement.md),
 and [Results](docs/results.md) for contracts, timing boundaries, and interpretation.
+
+## Export results
+
+Use `scripts/export_results.py` to create a validated neutral JSON bundle and
+custom JSON input for the pinned `github-action-benchmark` integration. Export
+defaults to the exploratory channel; official data requires a clean baseline and
+verified central publication context. See [Result export and publication](docs/result-publishing.md)
+for the command, environment input, metric/series identity, durable storage policy,
+and local Action compatibility check.

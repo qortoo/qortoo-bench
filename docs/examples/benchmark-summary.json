@@ -1,0 +1,223 @@
+{
+  "channel": "exploratory",
+  "completed_at_utc": "2026-01-01T00:00:01Z",
+  "environment": {
+    "arch": "fixture",
+    "cpu": "fixture",
+    "id": "synthetic",
+    "os": "synthetic-os",
+    "runner": "fixture"
+  },
+  "environment_provenance": "operator-supplied",
+  "harness_dirty": true,
+  "harness_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "measurement_baseline": false,
+  "native_sdk": {
+    "header_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "library_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "manifest": {
+      "abi_version_major": 1,
+      "abi_version_minor": 0,
+      "profile": "release",
+      "sdk_version": "fixture",
+      "target": "synthetic-target"
+    }
+  },
+  "performance_baseline": false,
+  "run_id": "synthetic-run",
+  "run_url": null,
+  "schema_version": 1,
+  "sources": {
+    "go": {
+      "repository": "https://github.com/qortoo/qortoo-go.git",
+      "sha": "e54206f329bbbb5fd7852e1de41c68f1a12e9d66"
+    },
+    "rust": {
+      "repository": "https://github.com/qortoo/qortoo-rs.git",
+      "sha": "859bb8330d4ffc74241437b7ef4e9685b7bd7ba6"
+    }
+  },
+  "started_at_utc": "20260101T000000Z",
+  "suites": [
+    {
+      "contract_id": "counter/v1",
+      "metric": {
+        "direction": "smaller",
+        "id": "latency",
+        "unit": "ns/op"
+      },
+      "scenarios": [
+        {
+          "budget": 200000,
+          "diff_median_ns_per_op": 50.0,
+          "go": {
+            "count": 10,
+            "max": 150.0,
+            "mean": 150.0,
+            "median": 150.0,
+            "min": 150.0,
+            "p95": 150.0,
+            "stddev": 0.0
+          },
+          "ratio_median": 1.5,
+          "rust": {
+            "count": 10,
+            "max": 100.0,
+            "mean": 100.0,
+            "median": 100.0,
+            "min": 100.0,
+            "p95": 100.0,
+            "stddev": 0.0
+          },
+          "scenario_id": "IncreaseBy"
+        },
+        {
+          "budget": 2000000,
+          "diff_median_ns_per_op": 50.0,
+          "go": {
+            "count": 10,
+            "max": 150.0,
+            "mean": 150.0,
+            "median": 150.0,
+            "min": 150.0,
+            "p95": 150.0,
+            "stddev": 0.0
+          },
+          "ratio_median": 1.5,
+          "rust": {
+            "count": 10,
+            "max": 100.0,
+            "mean": 100.0,
+            "median": 100.0,
+            "min": 100.0,
+            "p95": 100.0,
+            "stddev": 0.0
+          },
+          "scenario_id": "GetValue"
+        },
+        {
+          "budget": 20000,
+          "diff_median_ns_per_op": 50.0,
+          "go": {
+            "count": 10,
+            "max": 150.0,
+            "mean": 150.0,
+            "median": 150.0,
+            "min": 150.0,
+            "p95": 150.0,
+            "stddev": 0.0
+          },
+          "ratio_median": 1.5,
+          "rust": {
+            "count": 10,
+            "max": 100.0,
+            "mean": 100.0,
+            "median": 100.0,
+            "min": 100.0,
+            "p95": 100.0,
+            "stddev": 0.0
+          },
+          "scenario_id": "Transaction"
+        },
+        {
+          "budget": 20000,
+          "diff_median_ns_per_op": 50.0,
+          "go": {
+            "count": 10,
+            "max": 150.0,
+            "mean": 150.0,
+            "median": 150.0,
+            "min": 150.0,
+            "p95": 150.0,
+            "stddev": 0.0
+          },
+          "ratio_median": 1.5,
+          "rust": {
+            "count": 10,
+            "max": 100.0,
+            "mean": 100.0,
+            "median": 100.0,
+            "min": 100.0,
+            "p95": 100.0,
+            "stddev": 0.0
+          },
+          "scenario_id": "SyncLocal"
+        },
+        {
+          "budget": 100,
+          "diff_median_ns_per_op": 50.0,
+          "go": {
+            "count": 10,
+            "max": 150.0,
+            "mean": 150.0,
+            "median": 150.0,
+            "min": 150.0,
+            "p95": 150.0,
+            "stddev": 0.0
+          },
+          "ratio_median": 1.5,
+          "rust": {
+            "count": 10,
+            "max": 100.0,
+            "mean": 100.0,
+            "median": 100.0,
+            "min": 100.0,
+            "p95": 100.0,
+            "stddev": 0.0
+          },
+          "scenario_id": "BuildCounter"
+        }
+      ],
+      "series_definition": {
+        "build_profile": "release",
+        "contract_sha256": "281a6813947370b14fc8259de1af4abe36095dc782b118feef2376df2dd3e6ed",
+        "environment": {
+          "arch": "fixture",
+          "cpu": "fixture",
+          "id": "synthetic",
+          "os": "synthetic-os",
+          "runner": "fixture"
+        },
+        "go": "synthetic-go",
+        "profile": "full",
+        "protocol": "qortoo-public-api-round-mean/v1",
+        "rust_features": [
+          "observability"
+        ],
+        "rustc": "synthetic-rustc",
+        "source_repositories": {
+          "go": "https://github.com/qortoo/qortoo-go.git",
+          "rust": "https://github.com/qortoo/qortoo-rs.git"
+        },
+        "suite": {
+          "contract": "contracts/counter.json",
+          "id": "counter",
+          "implementations": {
+            "go": {
+              "component": "go-sdk",
+              "executable": "sdk",
+              "harness": "harnesses/go"
+            },
+            "rust": {
+              "component": "rust-sdk",
+              "executable": "counter",
+              "harness": "harnesses/rust"
+            }
+          },
+          "metric": {
+            "direction": "smaller",
+            "id": "latency",
+            "unit": "ns/op"
+          },
+          "schema_version": 1
+        },
+        "toolchains": {
+          "go": "1.27.2",
+          "rust": "1.97.1"
+        }
+      },
+      "series_id": "exploratory/counter/804fe3f7a4bef7a65c36772374571497bc82db4ceb921c936f92c3a249040c46",
+      "suite_id": "counter"
+    }
+  ]
+}

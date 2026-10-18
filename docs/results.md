@@ -63,3 +63,6 @@ Go runtime allocations and Rust native heap allocations are not measured or repo
 Comparative measurement requires compatible source/features, contracts, toolchains,
 and host conditions, warmup and repeated samples, and controlled execution order.
 Results from different CI runners cannot be subtracted to isolate binding costs.
+
+See [Result export and publication](result-publishing.md) for the single tracking
+integration, neutral document JSON, series separation, and durable storage contract.

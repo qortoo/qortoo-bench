@@ -1,0 +1,9 @@
+{
+  "description": "Synthetic schema extension fixture only; no server benchmark has run.",
+  "latency": [
+    {"name": "server/Request", "unit": "ns/op", "value": 1000, "direction": "smaller"}
+  ],
+  "throughput": [
+    {"name": "server/Requests", "unit": "requests/s", "value": 2000, "direction": "bigger"}
+  ]
+}
