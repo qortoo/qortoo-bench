@@ -50,15 +50,31 @@ workloads cross their actual reset interval. Final/previous values, operation
 counts, resets, payload sizes, and logical releases are validated.
 
 Each run saves stdout/stderr logs, `run-inputs.json`, validated `samples.json`,
-and `metadata.json` in gitignored `results/<run-id>/`. Metadata records SDK
-revisions, toolchains, native SDK/ABI manifest and checksums, command lines, and
-harness file hashes. A run without a harness commit records a null harness SHA
-and stays a development result.
-Failures keep their logs and failed status; fix the reported input/build problem
-and rerun the same command.
+and `metadata.json` in gitignored `results/<run-id>/`.
+
+## Run full measurements
+
+To run full budget multi-round comparative benchmarks on the same host:
+
+```sh
+make bench SOURCE_ROOT=.. GO=/opt/homebrew/opt/go@1.27/bin/go
+```
+
+To benchmark a single suite:
+
+```sh
+make bench SUITE=counter SOURCE_ROOT=.. GO=/opt/homebrew/opt/go@1.27/bin/go
+make bench SUITE=variable SOURCE_ROOT=.. GO=/opt/homebrew/opt/go@1.27/bin/go
+```
+
+Full measurement executes:
+- 1 discarded warmup round per scenario/implementation.
+- 10 measured rounds per scenario/implementation (340 total samples across both suites).
+- Interleaved execution order across measured rounds (`Rust -> Go` on even rounds, `Go -> Rust` on odd rounds).
+- Per-scenario statistical summary (min, max, mean, median, stddev, p95) and same-host comparison report (`comparison.md`, `comparison.json`).
 
 Smoke and full budgets use the same workload code. Smoke validates execution;
-its timing is not a performance baseline or Rust/Go overhead comparison.
+full measurement produces comparative performance data on a controlled host.
 
 See [Counter measurement](docs/counter-measurement.md), [Variable measurement](docs/variable-measurement.md),
 and [Results](docs/results.md) for contracts, timing boundaries, and interpretation.

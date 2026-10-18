@@ -6,3 +6,7 @@ SOURCE_ROOT ?=
 .PHONY: smoke
 smoke:
 	$(PYTHON) scripts/smoke.py --go "$(GO)" $(if $(SOURCE_ROOT),--source-root "$(SOURCE_ROOT)") $(if $(SUITE),--suite "$(SUITE)")
+
+.PHONY: bench
+bench:
+	$(PYTHON) scripts/measure.py --go "$(GO)" $(if $(SOURCE_ROOT),--source-root "$(SOURCE_ROOT)") $(if $(SUITE),--suite "$(SUITE)")
