@@ -1,0 +1,170 @@
+[
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Set-64B/impl=go",
+    "range": "stddev 60.8523 ns/op across round means",
+    "unit": "ns/op",
+    "value": 3009.8165
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Set-64B/impl=rust",
+    "range": "stddev 16.6302 ns/op across round means",
+    "unit": "ns/op",
+    "value": 816.940375
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Get-64B/impl=go",
+    "range": "stddev 12.4553 ns/op across round means",
+    "unit": "ns/op",
+    "value": 995.289925
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Get-64B/impl=rust",
+    "range": "stddev 1.19735 ns/op across round means",
+    "unit": "ns/op",
+    "value": 118.34515999999999
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Transaction-64B/impl=go",
+    "range": "stddev 273.661 ns/op across round means",
+    "unit": "ns/op",
+    "value": 29442.81125
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Transaction-64B/impl=rust",
+    "range": "stddev 154.017 ns/op across round means",
+    "unit": "ns/op",
+    "value": 6990.733749999999
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "SyncLocal-64B/impl=go",
+    "range": "stddev 1333.48 ns/op across round means",
+    "unit": "ns/op",
+    "value": 25329.698624999997
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "SyncLocal-64B/impl=rust",
+    "range": "stddev 1555.3 ns/op across round means",
+    "unit": "ns/op",
+    "value": 21551.34675
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Set-1024B/impl=go",
+    "range": "stddev 298.322 ns/op across round means",
+    "unit": "ns/op",
+    "value": 8514.61125
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Set-1024B/impl=rust",
+    "range": "stddev 41.6034 ns/op across round means",
+    "unit": "ns/op",
+    "value": 2147.0225
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Get-1024B/impl=go",
+    "range": "stddev 59.4944 ns/op across round means",
+    "unit": "ns/op",
+    "value": 3156.1309250000004
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Get-1024B/impl=rust",
+    "range": "stddev 1.61973 ns/op across round means",
+    "unit": "ns/op",
+    "value": 271.293725
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Transaction-1024B/impl=go",
+    "range": "stddev 3287.78 ns/op across round means",
+    "unit": "ns/op",
+    "value": 88020.075
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Transaction-1024B/impl=rust",
+    "range": "stddev 593.073 ns/op across round means",
+    "unit": "ns/op",
+    "value": 21145.875
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "SyncLocal-1024B/impl=go",
+    "range": "stddev 656.296 ns/op across round means",
+    "unit": "ns/op",
+    "value": 28282.06875
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "SyncLocal-1024B/impl=rust",
+    "range": "stddev 539.748 ns/op across round means",
+    "unit": "ns/op",
+    "value": 20759.5075
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Set-16384B/impl=go",
+    "range": "stddev 5134.44 ns/op across round means",
+    "unit": "ns/op",
+    "value": 80092.3
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Set-16384B/impl=rust",
+    "range": "stddev 381 ns/op across round means",
+    "unit": "ns/op",
+    "value": 23507.6
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Get-16384B/impl=go",
+    "range": "stddev 505.244 ns/op across round means",
+    "unit": "ns/op",
+    "value": 32706.2995
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Get-16384B/impl=rust",
+    "range": "stddev 26.978 ns/op across round means",
+    "unit": "ns/op",
+    "value": 2883.81875
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Transaction-16384B/impl=go",
+    "range": "stddev 26625.7 ns/op across round means",
+    "unit": "ns/op",
+    "value": 861032.75
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "Transaction-16384B/impl=rust",
+    "range": "stddev 7755.12 ns/op across round means",
+    "unit": "ns/op",
+    "value": 251097.125
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "SyncLocal-16384B/impl=go",
+    "range": "stddev 2825.94 ns/op across round means",
+    "unit": "ns/op",
+    "value": 112382.86249999999
+  },
+  {
+    "extra": "{\"channel\": \"official\", \"completed_at_utc\": \"2026-10-18T09:40:17.105958+00:00\", \"contract_id\": \"variable/v1\", \"contract_sha256\": \"8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef\", \"environment\": {\"arch\": \"x86_64\", \"cpu\": \"AMD EPYC 9V74 80-Core Processor\", \"id\": \"github-hosted-ubuntu24\", \"os\": \"Linux-6.17.0-1022-azure-x86_64-with-glibc2.39\", \"runner\": \"GitHub hosted ubuntu24; 4 logical CPUs\"}, \"environment_provenance\": \"measurement-host\", \"harness_dirty\": false, \"harness_sha\": \"83062e961c74299a60061b2b1f6b98ad492c9d4b\", \"measurement_baseline\": true, \"performance_baseline\": true, \"run_id\": \"39115851188-2\", \"run_url\": \"https://github.com/qortoo/qortoo-bench/actions/runs/39115851188/attempts/2\", \"series_id\": \"official/variable/7e3899842977682d3588e4f875898f4b2c4314e97548fecccf6db8a3266e8385\", \"sources\": {\"go\": {\"repository\": \"https://github.com/qortoo/qortoo-go.git\", \"sha\": \"e54206f329bbbb5fd7852e1de41c68f1a12e9d66\"}, \"rust\": {\"repository\": \"https://github.com/qortoo/qortoo-rs.git\", \"sha\": \"859bb8330d4ffc74241437b7ef4e9685b7bd7ba6\"}}, \"started_at_utc\": \"20261018T093751Z\"}",
+    "name": "SyncLocal-16384B/impl=rust",
+    "range": "stddev 492.381 ns/op across round means",
+    "unit": "ns/op",
+    "value": 54595.662500000006
+  }
+]
