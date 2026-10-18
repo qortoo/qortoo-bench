@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "components": {
+    "rust-sdk": {"source": "rust", "depends_on": []},
+    "go-sdk": {"source": "go", "depends_on": ["rust-sdk"]}
+  }
+}

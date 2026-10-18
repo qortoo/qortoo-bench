@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "sources": {
+    "rust": {
+      "repository": "https://github.com/qortoo/qortoo-rs.git",
+      "sha": "859bb8330d4ffc74241437b7ef4e9685b7bd7ba6"
+    },
+    "go": {
+      "repository": "https://github.com/qortoo/qortoo-go.git",
+      "sha": "e54206f329bbbb5fd7852e1de41c68f1a12e9d66"
+    }
+  },
+  "toolchains": {"rust": "1.97.1", "go": "1.27.2"},
+  "profile": "release",
+  "rust_features": ["observability"]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "counter/v1",
+  "transaction_operations": 10,
+  "max_counters_per_client": 100,
+  "execution": {
+    "realtime": false,
+    "handler_registered": false,
+    "measurement_threads": 1,
+    "warmup_rounds": 1,
+    "measured_rounds": 10,
+    "smoke_warmup_rounds": 0,
+    "smoke_rounds": 1
+  },
+  "scenarios": [
+    {"id": "IncreaseBy", "budget": 200000, "smoke_budget": 50001, "reset_every": 50000},
+    {"id": "GetValue", "budget": 2000000, "smoke_budget": 1000, "reset_every": null},
+    {"id": "Transaction", "budget": 20000, "smoke_budget": 5001, "reset_every": 5000},
+    {"id": "SyncLocal", "budget": 20000, "smoke_budget": 5001, "reset_every": 5000},
+    {"id": "BuildCounter", "budget": 100, "smoke_budget": 3, "reset_every": null}
+  ]
+}
