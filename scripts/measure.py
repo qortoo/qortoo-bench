@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import platform
+import re
 import subprocess
 import sys
 import uuid
@@ -35,14 +36,21 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--go", default="go", help="Go executable matching sources.lock.json")
     parser.add_argument("--source-root", type=Path, help="directory containing local qortoo-rs/qortoo-go repositories")
+    parser.add_argument("--lock-file", type=Path, default=ROOT / "sources.lock.json")
+    parser.add_argument("--run-id", help="unique run/attempt identity for central execution")
+    parser.add_argument("--environment", type=Path, help="environment captured on the measurement host")
     parser.add_argument("--suite", action="append", choices=sorted(VALIDATORS), help="suite to measure; repeat to select several (default: all)")
     args = parser.parse_args()
 
-    lock = json.loads((ROOT / "sources.lock.json").read_text())
+    lock_path = args.lock_file.resolve()
+    lock_path.relative_to(ROOT)
+    lock = json.loads(lock_path.read_text())
     names = list(dict.fromkeys(args.suite or sorted(VALIDATORS)))
     resolved = [load_suite(ROOT, lock, name) for name in names]
 
-    input_paths = [ROOT / "sources.lock.json", ROOT / "components.json"]
+    input_paths = [lock_path, ROOT / "components.json"]
+    if args.environment:
+        input_paths.append(args.environment.resolve())
     for suite, contract, contract_path in resolved:
         input_paths.extend([ROOT / f"suites/{suite['id']}.json", contract_path])
     input_hashes = {str(p.relative_to(ROOT)): checksum(p) for p in input_paths}
@@ -51,7 +59,10 @@ def main():
     go, go_version, rust_version = check_toolchains(lock, args.go, env)
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    output = ROOT / "results" / f"{stamp}-{uuid.uuid4().hex[:8]}"
+    run_id = args.run_id or f"{stamp}-{uuid.uuid4().hex[:8]}"
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", run_id):
+        raise ValueError("invalid run ID")
+    output = ROOT / "results" / run_id
     output.mkdir(parents=True)
 
     metadata = {
@@ -70,6 +81,10 @@ def main():
         "started_at_utc": stamp,
         "commands": [],
     }
+    if args.environment:
+        metadata["environment"] = json.loads(args.environment.read_text())
+        if metadata["environment"]["os"] != metadata["platform"]:
+            raise ValueError("captured environment does not match measurement platform")
     inputs = {
         "schema_version": 2,
         "suites": [{"suite": suite, "contract": contract} for suite, contract, _ in resolved],

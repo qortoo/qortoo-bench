@@ -98,6 +98,7 @@ def validate_run(run_dir, environment, channel, run_url, raw):
     require(environment["os"] == metadata["platform"], "environment OS does not match measured platform")
     require(channel in {"official", "exploratory"}, "unsupported channel")
     if channel == "official":
+        require(metadata.get("environment") == environment, "official export requires measurement-host environment")
         require(metadata["performance_baseline"] is True and metadata["harness_dirty"] is False, "official export requires a clean baseline")
         require(isinstance(metadata["harness_sha"], str) and re.fullmatch(r"[0-9a-f]{40}", metadata["harness_sha"]), "official export requires harness SHA")
         require(run_url and re.fullmatch(r"https://github.com/qortoo/qortoo-bench/actions/runs/[0-9]+(?:/attempts/[0-9]+)?", run_url), "official export requires central Actions run URL")
@@ -163,7 +164,8 @@ def export_run(run_dir, output, environment, channel="exploratory", run_url=None
         "measurement_baseline": metadata["performance_baseline"],
         "sources": metadata["sources"], "harness_sha": metadata["harness_sha"],
         "harness_dirty": metadata["harness_dirty"], "run_url": run_url,
-        "environment": environment, "environment_provenance": "operator-supplied",
+        "environment": environment,
+        "environment_provenance": "measurement-host" if metadata.get("environment") == environment else "operator-supplied",
         "started_at_utc": metadata["started_at_utc"], "completed_at_utc": metadata["completed_at_utc"],
     }
     summary = {"schema_version": 1, **provenance, "native_sdk": metadata["native_sdk"], "suites": []}

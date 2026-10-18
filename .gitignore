@@ -2,3 +2,4 @@
 /results/
 /harnesses/rust/target/
 __pycache__/
+/._runtime/

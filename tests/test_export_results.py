@@ -39,6 +39,7 @@ class ExportTests(unittest.TestCase):
                                                        "abi_version_minor": 0, "target": "synthetic-target"},
                                         "header_sha256": "b" * 64, "library_sha256": "c" * 64}}
         self.environment = {"id": "synthetic", "os": "synthetic-os", "cpu": "fixture", "arch": "fixture", "runner": "fixture"}
+        self.metadata["environment"] = self.environment
         seed = json.loads((ROOT / "tests/fixtures/counter-samples.json").read_text())["samples"]
         self.samples = [{**deepcopy(s), "round_index": r, "warmup": False} for r in range(10) for s in seed]
         self.warmup = [{**deepcopy(s), "warmup": True} for s in seed]

@@ -87,3 +87,6 @@ defaults to the exploratory channel; official data requires a clean baseline and
 verified central publication context. See [Result export and publication](docs/result-publishing.md)
 for the command, environment input, metric/series identity, durable storage policy,
 and local Action compatibility check.
+
+See [Central manual workflow](docs/central-workflow.md) to measure both SDKs on
+GitHub Actions, inspect permanent results, or retry an attempt.

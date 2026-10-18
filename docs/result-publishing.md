@@ -57,10 +57,11 @@ For example:
 }
 ```
 
-`os` must match the run's recorded platform. The exporter labels environment
-details as operator-supplied; this does not retroactively prove CPU identity or
-host isolation. Central workflows must capture these details on the measurement
-host and retain them with the run before export.
+`os` must match the run's recorded platform. Legacy environment details are
+operator-supplied and do not retroactively prove CPU identity or host isolation.
+The central workflow captures environment details on the measurement host and
+retains them in metadata before export. Official export requires this captured
+environment.
 
 ```sh
 python3 scripts/export_results.py results/<run-id> \
@@ -173,9 +174,9 @@ The Action's `ref` must identify the measured harness for manual dispatch fallba
 its event `head_commit` takes precedence when present, so verify that attribution
 against the manifest. This is never a substitute for the SDK SHA fields.
 
-This transaction is the implementation contract for the central workflow stage;
-the exporter and local PoC do not create a branch, push data, or dispatch a website
-build.
+The [central manual workflow](central-workflow.md) implements this transaction.
+The exporter and local PoC remain local operations and never push data or dispatch
+a website build. SDK request queuing and website refresh are separate integrations.
 
 ## Website consumption
 
