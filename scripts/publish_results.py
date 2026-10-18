@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def command(argv, cwd=None, env=None):
     result = subprocess.run(list(map(str, argv)), cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode:
-        raise RuntimeError(f"command failed ({result.returncode}): {argv[0]}: {result.stderr[-1500:]}")
+        raise RuntimeError(f"command failed ({result.returncode}): {argv[0]}: {(result.stderr or result.stdout)[-1500:]}")
     return result.stdout.strip()
 
 
@@ -193,6 +193,7 @@ def publish(bundle, manifest, remote, request_order, run_action, ancestor, git_e
 
 
 def action_runner(action_dir, harness_sha):
+    action_dir = action_dir.resolve()
     require(command(["git", "-C", action_dir, "rev-parse", "HEAD"]) == ACTION["revision"], "Action revision mismatch")
 
     def run(group, metrics, history):
