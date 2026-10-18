@@ -67,6 +67,7 @@ def prepare_sources(root, lock, source_root, run_fn):
             repository_name = source["repository"].rsplit("/", 1)[-1].removesuffix(".git")
             repository = str(source_root.resolve() / repository_name) if source_root else source["repository"]
             run_fn(f"clone-{name}", ["git", "clone", "--no-checkout", "--no-hardlinks", repository, str(path)])
+            run_fn(f"fetch-{name}", ["git", "-C", str(path), "fetch", "--no-tags", "origin", source["sha"]])
             run_fn(f"checkout-{name}", ["git", "-C", str(path), "checkout", "--detach", source["sha"]])
         validate_source(path, source["sha"])
 
