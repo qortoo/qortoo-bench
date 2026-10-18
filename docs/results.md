@@ -32,7 +32,7 @@ Counter and Variable) with `performance_baseline: false`.
 A full measurement run (`make bench`) executes:
 - 1 discarded warmup round per scenario/implementation (saved to `warmup-samples.json`).
 - 10 measured rounds per scenario/implementation (340 samples total, saved to `samples.json`).
-- Interleaved execution order across measured rounds (`Rust -> Go` on even rounds, `Go -> Rust` on odd rounds) to eliminate host bias.
+- Interleaved execution order across measured rounds (`Rust -> Go` on even rounds, `Go -> Rust` on odd rounds) to mitigate host condition drift.
 - Statistical summary including min, max, mean, median, standard deviation, and p95 latency.
 - Same-host comparison data saved to `comparison.json` and human-readable `comparison.md`.
 
@@ -58,7 +58,7 @@ Full measurement results produced on the same host with clean checkouts and matc
 conditions establish a valid comparative baseline (`performance_baseline: true`).
 Observed latency differences reflect the total path of the public API calls (including
 serialization, native boundary, and runtime coordination), not a pure CGO invocation overhead.
-Go runtime allocations and Rust native heap allocations are tracked separately from this latency report.
+Go runtime allocations and Rust native heap allocations are not measured or reported by this latency harness (latency only).
 
 Comparative measurement requires compatible source/features, contracts, toolchains,
 and host conditions, warmup and repeated samples, and controlled execution order.

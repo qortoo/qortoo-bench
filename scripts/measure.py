@@ -57,7 +57,7 @@ def main():
     metadata = {
         "schema_version": 3,
         "status": "running",
-        "performance_baseline": True,
+        "performance_baseline": False,
         "suite_ids": names,
         "profile": "full",
         "input_files_sha256": input_hashes,
@@ -85,6 +85,8 @@ def main():
 
     warmup_samples = []
     measured_samples = []
+    comparison_summary = None
+    report_md = None
 
     def run(label, command, cwd=ROOT):
         metadata["commands"].append({"label": label, "argv": list(map(str, command)), "cwd": str(cwd)})
@@ -113,7 +115,7 @@ def main():
                     sample["warmup"] = True
                     warmup_samples.append(sample)
 
-        # 2. Measured rounds (10 rounds with interleaved execution order)
+        # 2. Measured rounds (10 rounds with interleaved implementation order)
         num_rounds = 10
         print(f"Executing {num_rounds} measured rounds with interleaved implementation order...", flush=True)
         for r in range(num_rounds):
@@ -140,30 +142,39 @@ def main():
             if checksum(path) != input_hashes[str(path.relative_to(ROOT))]:
                 raise RuntimeError(f"input changed during execution: {path}")
 
-        # Validate measured sample consistency
+        # Validate measured sample consistency across all suites and cases
         validate_measured_samples(measured_samples, resolved, expected_rounds=num_rounds, expected_profile="full")
 
-        # Build comparison summary and Markdown report
+        metadata["status"] = "passed"
+
+        # Finalize metadata identity before summary and report generation
+        finalize_metadata(ROOT, output, metadata, len(measured_samples))
+
+        # Baseline promotion: promote only if execution passed, git tree is clean, and commit SHA exists
+        is_clean_baseline = (metadata["status"] == "passed") and (not metadata["harness_dirty"]) and (metadata["harness_sha"] is not None)
+        metadata["performance_baseline"] = is_clean_baseline
+
+        # Build comparison summary and Markdown report with finalized metadata
         comparison_summary = build_comparison_summary(measured_samples, resolved, metadata)
         report_md = generate_markdown_report(comparison_summary, metadata)
 
-        (output / "warmup-samples.json").write_text(json.dumps(warmup_samples, indent=2) + "\n")
-        (output / "samples.json").write_text(json.dumps(measured_samples, indent=2) + "\n")
         (output / "comparison.json").write_text(json.dumps(comparison_summary, indent=2) + "\n")
         (output / "comparison.md").write_text(report_md)
 
-        metadata["status"] = "passed"
-        print(f"\nMeasurement passed: {len(measured_samples)} validated samples across {names}; performance baseline: true", flush=True)
+        baseline_str = "true" if is_clean_baseline else "false (local/development)"
+        print(f"\nMeasurement passed: {len(measured_samples)} validated samples across {names}; performance baseline: {baseline_str}", flush=True)
         print("\n" + report_md, flush=True)
     except Exception as error:
-        metadata.update(status="failed", error=str(error))
+        metadata.update(status="failed", error=str(error), performance_baseline=False)
         raise
     finally:
-        finalize_metadata(ROOT, output, metadata, len(measured_samples))
+        if metadata.get("completed_at_utc") is None:
+            finalize_metadata(ROOT, output, metadata, len(measured_samples))
+        (output / "warmup-samples.json").write_text(json.dumps(warmup_samples, indent=2) + "\n")
+        (output / "samples.json").write_text(json.dumps(measured_samples, indent=2) + "\n")
         (output / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
         print(f"Benchmark run evidence saved at: {output}", flush=True)
 
 
 if __name__ == "__main__":
     main()
-

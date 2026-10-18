@@ -1,3 +1,4 @@
+from copy import deepcopy
 import math
 from pathlib import Path
 import sys
@@ -46,7 +47,7 @@ class MeasureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "invalid measurement value"):
             compute_statistics([1.0, -5.0])
 
-    def _make_mock_samples(self, count_per_case=10, profile="full"):
+    def _make_mock_samples(self, count_per_case=10, profile="full", warmup=False):
         samples = []
         suite, contract, _ = self.counter_suite
         for scenario in contract["scenarios"]:
@@ -63,39 +64,75 @@ class MeasureTests(unittest.TestCase):
                         "elapsed_ns": int(latency * scenario["budget"]),
                         "ns_per_op": latency,
                         "round_index": r,
+                        "warmup": warmup,
                     })
         return samples
 
     def test_validate_measured_samples_success(self):
-        samples = self._make_mock_samples(count_per_case=10, profile="full")
-        # Should pass without error
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
         validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
 
     def test_validate_measured_samples_rejects_insufficient_samples(self):
-        samples = self._make_mock_samples(count_per_case=9, profile="full")
-        with self.assertRaisesRegex(ValueError, "expected exactly 10 samples, got 9"):
+        samples = self._make_mock_samples(count_per_case=9, profile="full", warmup=False)
+        with self.assertRaisesRegex(ValueError, "expected 100 total samples, got 90"):
             validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
 
     def test_validate_measured_samples_rejects_excess_samples(self):
-        samples = self._make_mock_samples(count_per_case=11, profile="full")
-        with self.assertRaisesRegex(ValueError, "expected exactly 10 samples, got 11"):
+        samples = self._make_mock_samples(count_per_case=11, profile="full", warmup=False)
+        with self.assertRaisesRegex(ValueError, "expected 100 total samples, got 110"):
             validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
 
     def test_validate_measured_samples_rejects_wrong_profile(self):
-        samples = self._make_mock_samples(count_per_case=10, profile="smoke")
+        samples = self._make_mock_samples(count_per_case=10, profile="smoke", warmup=False)
         with self.assertRaisesRegex(ValueError, "expected profile full, got smoke"):
             validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
 
+    def test_validate_rejects_warmup_sample_injection(self):
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
+        samples[0]["warmup"] = True
+        with self.assertRaisesRegex(ValueError, "warmup sample must not be included"):
+            validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
+
+    def test_validate_rejects_contract_id_mismatch(self):
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
+        samples[0]["contract_id"] = "counter/v999"
+        with self.assertRaisesRegex(ValueError, "sample contract_id mismatch"):
+            validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
+
+    def test_validate_rejects_budget_mismatch(self):
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
+        samples[0]["operations"] = 1
+        with self.assertRaisesRegex(ValueError, "sample operations budget mismatch"):
+            validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
+
+    def test_validate_rejects_duplicate_round_sample(self):
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
+        # Duplicate round 0 to round 1 for the first case
+        samples[1] = deepcopy(samples[0])
+        with self.assertRaisesRegex(ValueError, "round_index set must be exactly 0..9"):
+            validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
+
+    def test_validate_rejects_unexpected_scenario(self):
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
+        samples[0]["scenario"] = "UnknownScenario"
+        with self.assertRaisesRegex(ValueError, "unexpected or unsupported sample case"):
+            validate_measured_samples(samples, [self.counter_suite], expected_rounds=10, expected_profile="full")
+
     def test_build_comparison_summary_structure(self):
-        samples = self._make_mock_samples(count_per_case=10, profile="full")
+        samples = self._make_mock_samples(count_per_case=10, profile="full", warmup=False)
         metadata = {
             "platform": "test-os",
             "rustc": "rustc 1.97.1",
             "go": "go version go1.27.2",
-            "performance_baseline": True,
+            "harness_sha": "dd56c56c4953cf48a514f37568bddd23c635b5ee",
+            "harness_dirty": True,
+            "performance_baseline": False,
         }
         summary = build_comparison_summary(samples, [self.counter_suite], metadata)
         self.assertEqual(summary["schema_version"], 1)
+        self.assertEqual(summary["harness_sha"], "dd56c56c4953cf48a514f37568bddd23c635b5ee")
+        self.assertEqual(summary["harness_dirty"], True)
+        self.assertEqual(summary["performance_baseline"], False)
         self.assertEqual(len(summary["suites"]), 1)
         suite_res = summary["suites"][0]
         self.assertEqual(suite_res["suite_id"], "counter")
@@ -108,10 +145,12 @@ class MeasureTests(unittest.TestCase):
 
         report = generate_markdown_report(summary, metadata)
         self.assertIn("# Same-Host Benchmark Comparison Report", report)
+        self.assertIn("(dirty: `True`)", report)
+        self.assertIn("to mitigate host condition drift", report)
+        self.assertIn("not measured or reported by this latency harness (latency only)", report)
         self.assertIn("IncreaseBy", report)
         self.assertIn("1.50x", report)
 
 
 if __name__ == "__main__":
     unittest.main()
-

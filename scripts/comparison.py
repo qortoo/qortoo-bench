@@ -35,29 +35,74 @@ def compute_statistics(values):
 
 def validate_measured_samples(samples, resolved_suites, expected_rounds=10, expected_profile="full"):
     require(expected_rounds > 0, "expected_rounds must be positive")
+
+    expected_cases = {}
+    for suite, contract, _ in resolved_suites:
+        suite_id = suite["id"]
+        contract_id = contract["id"]
+        for scenario in contract["scenarios"]:
+            sc_id = scenario["id"]
+            budget = scenario["budget"] if expected_profile == "full" else scenario["smoke_budget"]
+            for impl in sorted(suite["implementations"]):
+                key = (suite_id, sc_id, impl)
+                expected_cases[key] = {
+                    "contract_id": contract_id,
+                    "budget": budget,
+                }
+
+    total_expected = len(expected_cases) * expected_rounds
+    require(
+        len(samples) == total_expected,
+        f"expected {total_expected} total samples, got {len(samples)}",
+    )
+
     grouped = {}
     for sample in samples:
         require(sample.get("profile") == expected_profile, f"expected profile {expected_profile}, got {sample.get('profile')}")
-        suite_id = sample.get("contract_id", "").split("/")[0]
+        require(sample.get("warmup") is False, "warmup sample must not be included in measured samples")
+
+        r_idx = sample.get("round_index")
+        require(
+            isinstance(r_idx, int) and 0 <= r_idx < expected_rounds,
+            f"invalid or missing round_index: {r_idx}",
+        )
+
+        contract_id = sample.get("contract_id", "")
+        suite_id = contract_id.split("/")[0] if "/" in contract_id else ""
         scenario = sample.get("scenario")
         impl = sample.get("implementation")
         require(suite_id and scenario and impl, "sample missing suite/scenario/implementation")
+
         key = (suite_id, scenario, impl)
+        require(key in expected_cases, f"unexpected or unsupported sample case: {key}")
+
+        spec = expected_cases[key]
+        require(
+            contract_id == spec["contract_id"],
+            f"sample contract_id mismatch: expected {spec['contract_id']}, got {contract_id}",
+        )
+        require(
+            sample.get("operations") == spec["budget"],
+            f"sample operations budget mismatch for {key}: expected {spec['budget']}, got {sample.get('operations')}",
+        )
+
+        elapsed = sample.get("elapsed_ns")
+        require(isinstance(elapsed, int) and elapsed > 0, "invalid elapsed time")
+        require(math.isfinite(sample.get("ns_per_op", -1)) and sample["ns_per_op"] > 0, f"invalid sample latency: {sample}")
+
         grouped.setdefault(key, []).append(sample)
 
-    for suite, contract, _ in resolved_suites:
-        suite_id = suite["id"]
-        for scenario in contract["scenarios"]:
-            sc_id = scenario["id"]
-            for impl in sorted(suite["implementations"]):
-                key = (suite_id, sc_id, impl)
-                case_samples = grouped.get(key, [])
-                require(
-                    len(case_samples) == expected_rounds,
-                    f"{suite_id}/{sc_id}/{impl}: expected exactly {expected_rounds} samples, got {len(case_samples)}",
-                )
-                for s in case_samples:
-                    require(math.isfinite(s.get("ns_per_op", -1)) and s["ns_per_op"] > 0, f"invalid sample latency: {s}")
+    for key, spec in expected_cases.items():
+        case_samples = grouped.get(key, [])
+        require(
+            len(case_samples) == expected_rounds,
+            f"{key[0]}/{key[1]}/{key[2]}: expected exactly {expected_rounds} samples, got {len(case_samples)}",
+        )
+        round_indices = [s["round_index"] for s in case_samples]
+        require(
+            sorted(round_indices) == list(range(expected_rounds)),
+            f"{key[0]}/{key[1]}/{key[2]}: round_index set must be exactly 0..{expected_rounds - 1}, got {sorted(round_indices)}",
+        )
 
 
 def build_comparison_summary(samples, resolved_suites, metadata):
@@ -105,7 +150,7 @@ def build_comparison_summary(samples, resolved_suites, metadata):
 
     return {
         "schema_version": 1,
-        "performance_baseline": metadata.get("performance_baseline", True),
+        "performance_baseline": metadata.get("performance_baseline", False),
         "platform": metadata.get("platform"),
         "rustc": metadata.get("rustc"),
         "go": metadata.get("go"),
@@ -119,6 +164,8 @@ def build_comparison_summary(samples, resolved_suites, metadata):
 
 
 def generate_markdown_report(summary, metadata):
+    dirty = metadata.get("harness_dirty")
+    dirty_str = str(dirty) if dirty is not None else "unknown"
     lines = [
         "# Same-Host Benchmark Comparison Report",
         "",
@@ -126,8 +173,8 @@ def generate_markdown_report(summary, metadata):
         f"- **Platform**: `{metadata.get('platform', 'unknown')}`",
         f"- **Rust Toolchain**: `{metadata.get('rustc', 'unknown')}`",
         f"- **Go Toolchain**: `{metadata.get('go', 'unknown')}`",
-        f"- **Harness SHA**: `{metadata.get('harness_sha', 'null')}` (dirty: `{metadata.get('harness_dirty', False)}`)",
-        f"- **Rounds**: 10 measured rounds (1 discarded warmup) with interleaved execution order per round",
+        f"- **Harness SHA**: `{metadata.get('harness_sha', 'null')}` (dirty: `{dirty_str}`)",
+        f"- **Rounds**: 10 measured rounds (1 discarded warmup) with interleaved execution order per round to mitigate host condition drift",
         "",
         "## Measurement Interpretation & Contract",
         "",
@@ -135,7 +182,7 @@ def generate_markdown_report(summary, metadata):
         "> Latency values are reported in `ns/op` where smaller numbers represent better performance.",
         "> Observed differences reflect the total path of the public API calls (including serialization, FFI, and runtime interactions),",
         "> not a pure CGO invocation overhead.",
-        "> Go runtime allocations and Rust native heap allocations are tracked separately from this latency report.",
+        "> Go runtime allocations and Rust native heap allocations are not measured or reported by this latency harness (latency only).",
         "",
     ]
 
@@ -173,4 +220,3 @@ def generate_markdown_report(summary, metadata):
         lines.append("")
 
     return "\n".join(lines) + "\n"
-
