@@ -4,11 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       rust_sha:
-        description: Full qortoo-rs commit SHA (blank uses sources.lock.json)
+        description: Manual Rust SHA (blank uses source lock; not used for SDK events)
         type: string
         default: ''
       go_sha:
-        description: Full qortoo-go commit SHA (blank uses sources.lock.json)
+        description: Manual Go SHA (blank uses source lock; not used for SDK events)
+        type: string
+        default: ''
+      source_component:
+        description: SDK main event component (rust or go)
+        type: string
+        default: ''
+      source_sha:
+        description: Exact SDK main push SHA
+        type: string
+        default: ''
+      source_run_id:
+        description: SDK main push caller run ID
+        type: string
+        default: ''
+      request_id:
+        description: Retry an existing request with its original resolved sources
         type: string
         default: ''
 
@@ -18,25 +34,64 @@ permissions:
 env:
   SELECTED_RUST_SHA: ${{ inputs.rust_sha }}
   SELECTED_GO_SHA: ${{ inputs.go_sha }}
+  SOURCE_COMPONENT: ${{ inputs.source_component }}
+  SOURCE_SHA: ${{ inputs.source_sha }}
+  SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+  REQUEST_ID: ${{ inputs.request_id }}
 
 jobs:
-  measure:
+  request:
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    outputs:
+      request_id: ${{ steps.register.outputs.request_id }}
+      should_run: ${{ steps.register.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Register and claim immutable request
+        id: register
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/bench_requests.py register
+      - name: Transfer canonical source selection
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: request-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ._runtime/sources.lock.json
+            ._runtime/request.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  measure:
+    needs: request
+    if: needs.request.outputs.should_run == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - name: Resolve fixed source inputs and record host
-        run: python3 scripts/central_inputs.py --output ._runtime/sources.lock.json --environment-output ._runtime/environment.json
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: request-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ._runtime
+      - name: Capture measurement host with canonical source inputs
+        run: python3 scripts/central_inputs.py --lock ._runtime/sources.lock.json --output ._runtime/sources.lock.json --environment-output ._runtime/environment.json
       - name: Install Rust
         run: rustup toolchain install 1.97.1 --profile minimal
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version: '1.27.2'
           cache: false
-      - name: Measure both SDKs on this host
+      - name: Verify compatibility and measure both SDKs on this host
         run: |
           python3 scripts/measure.py --lock-file ._runtime/sources.lock.json \
             --environment ._runtime/environment.json --run-id "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
@@ -63,6 +118,9 @@ jobs:
             results/*/*.json
             results/*/*.md
             results/*/*.log
+            results/*/*.lock
+            results/*/*.mod
+            results/*/*.sum
             ._runtime/sources.lock.json
             ._runtime/environment.json
           include-hidden-files: true
@@ -70,21 +128,22 @@ jobs:
           retention-days: 30
 
   publish:
-    needs: measure
+    needs: [request, measure]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: write
-    concurrency:
-      group: bench-data-publisher
-      cancel-in-progress: false
+    # Optimistic data-branch transactions preserve every request without a
+    # concurrency group that could replace a pending publisher.
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
-      - name: Resolve the same trusted source selection
-        run: python3 scripts/central_inputs.py --output ._runtime/sources.lock.json
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: request-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ._runtime
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: candidate-${{ github.run_id }}-${{ github.run_attempt }}
@@ -97,10 +156,35 @@ jobs:
         run: |
           git clone --no-checkout https://github.com/benchmark-action/github-action-benchmark.git ._runtime/action
           git -C ._runtime/action checkout --detach 4322e5726e6334590d251fc4f92bec0efafc45dc
-      - name: Revalidate and publish immutable results
+      - name: Revalidate and atomically publish results and request outcome
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 scripts/publish_results.py --bundle ._runtime/bundle \
             --lock ._runtime/sources.lock.json --action-directory ._runtime/action
           cat ._runtime/publication.json >> "$GITHUB_STEP_SUMMARY"
+
+  failure:
+    needs: [request, measure, publish]
+    if: always() && needs.request.outputs.should_run == 'true' && needs.publish.result != 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      REQUEST_ID: ${{ needs.request.outputs.request_id }}
+      FAILURE_STATUS: ${{ contains(needs.*.result, 'cancelled') && 'cancelled' || 'failed' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Retrieve bounded failure diagnostics
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ._runtime/diagnostics
+      - name: Retain failed request without advancing successful results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/bench_requests.py finish --status "$FAILURE_STATUS"

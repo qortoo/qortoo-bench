@@ -6,7 +6,7 @@ The Action is a community project, not a GitHub first-party benchmark service.
 The pinned revision is `4322e5726e6334590d251fc4f92bec0efafc45dc` (`v1.22.2`).
 Neutral run bundles are the durable record. The `qortoo` website consumes their
 JSON directly and owns presentation. The Action's default Pages dashboard is not
-deployed, and Bencher/CodSpeed are not additional upload destinations.
+deployed.
 
 ## Why this integration
 
@@ -38,9 +38,9 @@ The following responsibilities remain with Qortoo:
   In particular, the Action can treat unreadable history as empty; the publisher
   must validate existing history before invoking it and fail on corruption.
 
-These limitations fit the current collection/documentation scope, so a second
-Bencher or CodSpeed production implementation is unnecessary. Existing SDK
-integrations and historical results remain until the dedicated cleanup stage.
+These limitations fit the current collection and documentation scope. SDKs
+dispatch measurement requests to this central workflow, which publishes
+validated results for the website.
 
 ## Export a measured run
 
@@ -150,7 +150,7 @@ The trusted publisher performs one transaction:
 1. Validate the central event, selected SDK commits, environment, bundle schema,
    hashes, baseline eligibility, and existing history/index. Measurement jobs have
    read-only repository permissions and receive no publication credentials.
-2. Acquire the publication lock, read the current `bench-data` tip, and stage the
+2. Read the current `bench-data` tip in an optimistic transaction and stage the
    immutable bundle. An already indexed identical bundle needs no history append.
 3. Run the pinned Action once per manifest group with that group's `tool`,
    `name`, `output_file`, and yearly `history_file`. Use external JSON mode,
@@ -168,15 +168,17 @@ The trusted publisher performs one transaction:
    explicit failed publication rather than losing history. Queue/retry handling
    must retain every main request; a concurrency group alone is not a FIFO queue.
 
-Only the publisher has Contents write access to the data branch. A separate
+Request registration/finalization and the publisher have Contents write access
+to the data branch, in jobs that never execute SDK code. A separate
 website-refresh credential can request the existing `qortoo` documentation build.
 The Action's `ref` must identify the measured harness for manual dispatch fallback;
 its event `head_commit` takes precedence when present, so verify that attribution
 against the manifest. This is never a substitute for the SDK SHA fields.
 
-The [central manual workflow](central-workflow.md) implements this transaction.
+The [central workflow](central-workflow.md) implements this transaction.
 The exporter and local PoC remain local operations and never push data or dispatch
-a website build. SDK request queuing and website refresh are separate integrations.
+a website build. The request ledger and publisher share optimistic branch transactions. Website
+refresh is a separate integration.
 
 ## Website consumption
 
@@ -215,3 +217,12 @@ Upstream references (checked 2026-10-18):
 [pinned Action inputs/runtime](https://github.com/benchmark-action/github-action-benchmark/blob/4322e5726e6334590d251fc4f92bec0efafc45dc/action.yml),
 [commit attribution](https://github.com/benchmark-action/github-action-benchmark/blob/4322e5726e6334590d251fc4f92bec0efafc45dc/dist/src/extract.js),
 [history append and previous-commit selection](https://github.com/benchmark-action/github-action-benchmark/blob/4322e5726e6334590d251fc4f92bec0efafc45dc/dist/src/addBenchmarkEntry.js).
+
+## SDK main request provenance
+
+Central event results include a request ID and the verified SDK main push origin.
+The canonical resolved source lock and attempt outcomes live in `requests/` on
+`bench-data`. Successful publication updates the request outcome in the same Git
+commit as immutable bundles and indexes. Failed/incompatible attempts retain the
+previous successful latest pointers. Duplicate published requests do not append
+history. See the [central workflow guide](central-workflow.md) for retries.

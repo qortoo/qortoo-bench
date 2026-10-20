@@ -159,6 +159,24 @@ class ExportTests(unittest.TestCase):
         changed[2]["sources"]["rust"]["sha"] = "d" * 40
         self.assertEqual(base, identity(series_definition(*changed)))
 
+    def test_dependency_snapshot_is_hashed_exported_and_separates_series(self):
+        data = b"locked dependency fixture\n"
+        (self.run / "rust-0.lock").write_bytes(data)
+        deps = {"rust-0.lock": digest(data)}
+        before = identity(series_definition(self.suite, self.contract, self.inputs, self.metadata, self.environment))
+        self.inputs["build_dependencies"] = self.metadata["build_dependencies"] = deps
+        self.write("run-inputs.json", self.inputs)
+        self.metadata["run_inputs_sha256"] = digest((self.run / "run-inputs.json").read_bytes())
+        self.refresh_metadata()
+        after = identity(series_definition(self.suite, self.contract, self.inputs, self.metadata, self.environment))
+        self.assertNotEqual(before, after)
+        manifest = export_run(self.run, self.output, self.environment)
+        self.assertEqual(manifest["build_dependencies"], deps)
+        self.assertIn("rust-0.lock", manifest["raw_files_sha256"])
+        (self.run / "rust-0.lock").write_bytes(b"tampered\n")
+        with self.assertRaisesRegex(ValueError, "dependency snapshot hash"):
+            export_run(self.run, self.root / "tampered-export", self.environment)
+
     def test_server_extension_keeps_latency_and_throughput_separate(self):
         fixture = json.loads((ROOT / "tests/fixtures/server-metrics.json").read_text())
         for name, tool in [("latency", "customSmallerIsBetter"), ("throughput", "customBiggerIsBetter")]:

@@ -16,16 +16,11 @@ from central_inputs import REPOSITORIES, resolve
 from contract_support import require
 from export_results import ACTION, digest, export_run, json_bytes
 from suite_registry import VALIDATORS
+from bench_requests import load as load_request, finish as finish_request
+from data_store import command, git_credentials
 
 LIMIT = 25 * 1024 * 1024
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def command(argv, cwd=None, env=None):
-    result = subprocess.run(list(map(str, argv)), cwd=cwd, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode:
-        raise RuntimeError(f"command failed ({result.returncode}): {argv[0]}: {(result.stderr or result.stdout)[-1500:]}")
-    return result.stdout.strip()
 
 
 def read_json(path):
@@ -45,6 +40,7 @@ def verify_bundle(bundle, expected):
     require(manifest["action"] == ACTION and manifest["channel"] == "official", "unexpected publication integration/channel")
     for key in ("harness_sha", "run_id", "run_url", "sources"):
         require(manifest[key] == expected[key], f"publication context mismatch: {key}")
+    require(manifest.get("request") == expected.get("request"), "publication request mismatch")
     require(manifest["harness_dirty"] is False and manifest["performance_baseline"] is True, "not an official baseline")
     for name, sha in manifest["files_sha256"].items():
         require(name in {"summary.json", "raw.tar.gz"} | {f"metrics/{suite}.json" for suite in VALIDATORS}, "unexpected bundle file")
@@ -110,7 +106,7 @@ def validate_history(path, group):
 def catalog(root):
     path = root / "index.json"
     if not path.exists():
-        require(not any(p.name != ".git" for p in root.iterdir()), "data branch has no index")
+        require(not any(p.name not in {".git", "requests"} for p in root.iterdir()), "data branch has no index")
         return {"schema_version": 1, "shards": {}, "latest": {}}, {}
     index = read_json(path)
     require(index["schema_version"] == 1 and isinstance(index["latest"], dict), "unsupported index")
@@ -125,6 +121,13 @@ def catalog(root):
 
 
 def append_bundle(root, bundle, manifest, request_order, run_action, ancestor):
+    request = manifest.get("request")
+    if request:
+        record = load_request(root, request["request_id"])
+        require(record["lock"]["sources"] == manifest["sources"] and record["event"] == request["event"], "request selection mismatch")
+        if record["status"] == "published":
+            return False
+        require(record["active_attempt"] == manifest["run_id"] and record["status"] == "running", "request attempt is no longer active")
     index, shards = catalog(root)
     for group in manifest["groups"]:
         require(re.fullmatch(r"history/official/[a-z][a-z0-9_-]*/[0-9a-f]{64}/[0-9]{4}\.json", group["history_file"]), "invalid history path")
@@ -163,6 +166,8 @@ def append_bundle(root, bundle, manifest, request_order, run_action, ancestor):
             index["latest"][series] = entry
     (root / "index.json").write_bytes(json_bytes(index))
     require((root / "index.json").stat().st_size <= LIMIT, "root index exceeds storage budget")
+    if request:
+        finish_request(root, request["request_id"], manifest["run_id"], "published")
     return True
 
 
@@ -231,16 +236,17 @@ def main():
     parser.add_argument("--action-directory", type=Path, required=True)
     args = parser.parse_args()
     require(os.environ.get("GITHUB_REPOSITORY") == "qortoo/qortoo-bench" and os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
-            and os.environ.get("GITHUB_REF") == "refs/heads/main", "publication requires central main manual workflow")
+            and os.environ.get("GITHUB_REF") == "refs/heads/main", "publication requires the central main dispatch workflow")
     run, attempt = os.environ["GITHUB_RUN_ID"], os.environ["GITHUB_RUN_ATTEMPT"]
     require(run.isdigit() and attempt.isdigit(), "invalid Actions attempt identity")
     expected = {"harness_sha": os.environ["GITHUB_SHA"], "run_id": f"{run}-{attempt}",
                 "run_url": f"https://github.com/qortoo/qortoo-bench/actions/runs/{run}/attempts/{attempt}",
                 "sources": resolve(read_json(args.lock))["sources"], "harness_files_sha256": tracked_hashes(ROOT)}
+    selected = read_json(args.lock)
+    if "request" in selected:
+        expected["request"] = selected["request"]
     manifest = verify_bundle(args.bundle, expected)
-    import base64
-    auth = base64.b64encode(f"x-access-token:{os.environ['GH_TOKEN']}".encode()).decode()
-    git_env = {**os.environ, "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "http.https://github.com/.extraheader", "GIT_CONFIG_VALUE_0": f"AUTHORIZATION: basic {auth}"}
+    git_env = git_credentials()
     result = publish(args.bundle, manifest, "https://github.com/qortoo/qortoo-bench.git", [int(run), int(attempt)],
                      action_runner(args.action_directory, expected["harness_sha"]), ancestor, git_env)
     print(json.dumps(result))

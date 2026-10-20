@@ -19,6 +19,8 @@ from bench_support import (
     setup_environment,
     stage_native_sdk,
     validate_source,
+    validate_compatibility,
+    validate_build_dependencies,
 )
 from suite_registry import VALIDATORS, load_suite
 
@@ -30,12 +32,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--go", default="go", help="Go executable matching sources.lock.json")
     parser.add_argument("--source-root", type=Path, help="directory containing local qortoo-rs/qortoo-go repositories")
+    parser.add_argument("--lock-file", type=Path, default=ROOT / "sources.lock.json")
     parser.add_argument("--suite", action="append", choices=sorted(VALIDATORS), help="suite to validate; repeat to select several (default: all)")
     args = parser.parse_args()
-    lock = json.loads((ROOT / "sources.lock.json").read_text())
+    lock_path = args.lock_file.resolve()
+    lock_path.relative_to(ROOT)
+    lock = json.loads(lock_path.read_text())
     names = list(dict.fromkeys(args.suite or sorted(VALIDATORS)))
     resolved = [load_suite(ROOT, lock, name) for name in names]
-    input_paths = [ROOT / "sources.lock.json", ROOT / "components.json"]
+    input_paths = [lock_path, ROOT / "components.json"]
     for suite, contract, contract_path in resolved:
         input_paths.extend([ROOT / f"suites/{suite['id']}.json", contract_path])
     input_hashes = {str(p.relative_to(ROOT)): checksum(p) for p in input_paths}
@@ -74,7 +79,10 @@ def main():
         run("contract-tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
         prepare_sources(ROOT, lock, args.source_root, run)
         metadata["native_sdk"] = stage_native_sdk(ROOT, env, run)
+        validate_compatibility(ROOT, go, run)
         binaries = build_harnesses(ROOT, resolved, output, env, go, run)
+        metadata["build_dependencies"] = inputs["build_dependencies"] = json.loads((output / "build-dependencies.json").read_text())
+        (output / "run-inputs.json").write_text(json.dumps(inputs, indent=2) + "\n")
 
         for suite, contract, contract_path in resolved:
             for scenario in contract["scenarios"]:
@@ -87,6 +95,7 @@ def main():
                     samples.append(sample)
         for name, source in lock["sources"].items():
             validate_source(ROOT / "_sources" / name, source["sha"])
+        validate_build_dependencies(ROOT, metadata["build_dependencies"])
         for path in input_paths:
             if checksum(path) != input_hashes[str(path.relative_to(ROOT))]:
                 raise RuntimeError(f"input changed during execution: {path}")
