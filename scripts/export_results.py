@@ -59,7 +59,7 @@ def action_metrics(rows, provenance):
 
 def series_definition(suite, contract, inputs, metadata, environment):
     """SDK revisions vary within a series; contract, toolchain, and environment do not."""
-    return {
+    result = {
         "protocol": "qortoo-public-api-round-mean/v1",
         "suite": suite,
         "contract_sha256": identity(contract),
@@ -72,6 +72,9 @@ def series_definition(suite, contract, inputs, metadata, environment):
         "go": metadata["go"],
         "source_repositories": {name: source["repository"] for name, source in inputs["sources"].items()},
     }
+    if "build_dependencies" in inputs:
+        result["build_dependencies"] = inputs["build_dependencies"]
+    return result
 
 
 def validate_run(run_dir, environment, channel, run_url, raw):
@@ -86,6 +89,11 @@ def validate_run(run_dir, environment, channel, run_url, raw):
     require(metadata["run_inputs_sha256"] == digest(raw["run-inputs.json"]), "input snapshot hash mismatch")
     for key in ("sources", "build_profile", "rust_features", "input_files_sha256"):
         require(inputs[key] == metadata[key], f"metadata/input mismatch: {key}")
+    require(inputs.get("request") == metadata.get("request"), "request provenance mismatch")
+    require(inputs.get("build_dependencies") == metadata.get("build_dependencies"), "dependency provenance mismatch")
+    for name, sha in inputs.get("build_dependencies", {}).items():
+        require(re.fullmatch(r"(?:rust-[0-9]+\.lock|go-[0-9]+\.(?:mod|sum))", name), "invalid dependency snapshot name")
+        require(name in raw and digest(raw[name]) == sha, "dependency snapshot hash mismatch")
     for source in inputs["sources"].values():
         require(re.fullmatch(r"[0-9a-f]{40}", source["sha"]), "source must use full commit SHA")
     require(inputs["build_profile"] == "release" and inputs["rust_features"] == ["observability"], "unsupported SDK build configuration")
@@ -156,7 +164,7 @@ def archive(files):
 
 def export_run(run_dir, output, environment, channel="exploratory", run_url=None):
     require(not output.exists(), "output already exists; use a new bundle directory")
-    raw = {p.name: p.read_bytes() for p in sorted(run_dir.iterdir()) if p.is_file() and p.suffix in {".json", ".md", ".log"}}
+    raw = {p.name: p.read_bytes() for p in sorted(run_dir.iterdir()) if p.is_file() and p.suffix in {".json", ".md", ".log", ".lock", ".mod", ".sum"}}
     inputs, metadata, comparison, resolved = validate_run(run_dir, environment, channel, run_url, raw)
     provenance = {
         "run_id": run_dir.name, "channel": channel,
@@ -168,6 +176,10 @@ def export_run(run_dir, output, environment, channel="exploratory", run_url=None
         "environment_provenance": "measurement-host" if metadata.get("environment") == environment else "operator-supplied",
         "started_at_utc": metadata["started_at_utc"], "completed_at_utc": metadata["completed_at_utc"],
     }
+    if "request" in metadata:
+        provenance["request"] = metadata["request"]
+    if "build_dependencies" in metadata:
+        provenance["build_dependencies"] = metadata["build_dependencies"]
     summary = {"schema_version": 1, **provenance, "native_sdk": metadata["native_sdk"], "suites": []}
     files = {}
     groups = []

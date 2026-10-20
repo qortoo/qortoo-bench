@@ -71,12 +71,19 @@ def prepare_sources(root, lock, source_root, run_fn):
             run_fn(f"checkout-{name}", ["git", "-C", str(path), "checkout", "--detach", source["sha"]])
         validate_source(path, source["sha"])
 
-    rust = root / "_sources/rust"
     go_source = root / "_sources/go"
     ci = (go_source / ".github/workflows/ci.yml").read_text()
     pins = [line.split(":", 1)[1].strip() for line in ci.splitlines() if line.startswith("  QORTOO_RS_REF:")]
-    if pins != [lock["sources"]["rust"]["sha"]]:
+    if not lock.get("request") and pins != [lock["sources"]["rust"]["sha"]]:
         raise RuntimeError("Go CI pin does not match the selected Rust source")
+    if lock.get("request", {}).get("event", {}).get("kind") == "sdk-main":
+        if pins != [lock["request"]["event"]["go_ci_rust_sha"]]:
+            raise RuntimeError("Go CI pin changed after request resolution")
+
+
+def validate_compatibility(root, go, run_fn):
+    """Exercise the actual Go/native combination before measuring its latency."""
+    run_fn("sdk-go-compatibility", [go, "test", "-a", "-count=1", "-race", "./..."], root / "_sources/go")
 
 
 def stage_native_sdk(root, env, run_fn):
@@ -98,22 +105,51 @@ def stage_native_sdk(root, env, run_fn):
 
 def build_harnesses(root, resolved, output_dir, env, go, run_fn):
     binaries = {}
+    runtime = root / "._runtime"
+    runtime.mkdir(exist_ok=True)
+    dependencies = {}
+
+    def preserve(path, name):
+        shutil.copyfile(path, output_dir / name)
+        dependencies[name] = checksum(path)
+
     rust_adapters = {(suite["implementations"]["rust"]["harness"], suite["implementations"]["rust"]["executable"]) for suite, _, _ in resolved}
-    for directory in sorted({directory for directory, _ in rust_adapters}):
-        harness = root / directory
+    rust_paths = {}
+    for number, directory in enumerate(sorted({directory for directory, _ in rust_adapters})):
+        harness = runtime / f"rust-{number}"
+        if harness.exists():
+            shutil.rmtree(harness)
+        shutil.copytree(root / directory, harness, ignore=shutil.ignore_patterns("target"))
+        # Seed from the selected SDK's immutable dependency lock, preserving its
+        # transitive versions while adding the trusted harness workspace package.
+        shutil.copyfile(root / "_sources/rust/Cargo.lock", harness / "Cargo.lock")
+        run_fn(f"rust-lock-{number}", ["cargo", "update", "--workspace"], harness)
+        preserve(harness / "Cargo.lock", f"rust-{number}.lock")
         run_fn("rust-build", ["cargo", "build", "--release", "--locked", "--bins"], harness)
+        rust_paths[directory] = harness
     for directory, executable in rust_adapters:
-        binaries[("rust", directory, executable)] = root / directory / "target/release" / executable
+        binaries[("rust", directory, executable)] = rust_paths[directory] / "target/release" / executable
 
     go_adapters = {(suite["implementations"]["go"]["harness"], suite["implementations"]["go"]["executable"]) for suite, _, _ in resolved}
+    go_paths = {}
+    for number, directory in enumerate(sorted({directory for directory, _ in go_adapters})):
+        harness = runtime / f"go-{number}"
+        if harness.exists():
+            shutil.rmtree(harness)
+        shutil.copytree(root / directory, harness)
+        run_fn(f"go-lock-{number}", [go, "mod", "tidy"], harness)
+        preserve(harness / "go.mod", f"go-{number}.mod")
+        preserve(harness / "go.sum", f"go-{number}.sum")
+        go_paths[directory] = harness
     for directory, executable in sorted(go_adapters):
-        harness = root / directory
+        harness = go_paths[directory]
         run_fn(f"go-tests-{executable}", [go, "test", "-a", "-count=1", "-mod=readonly", "-v", "."], harness)
         binary = output_dir / f"{executable}-go"
         # External C libraries do not invalidate Go's build cache.
         run_fn(f"go-build-{executable}", [go, "build", "-a", "-mod=readonly", "-trimpath", "-o", str(binary), "."], harness)
         binaries[("go", directory, executable)] = binary
 
+    (output_dir / "build-dependencies.json").write_text(json.dumps(dependencies, sort_keys=True) + "\n")
     return binaries
 
 
@@ -129,4 +165,11 @@ def finalize_metadata(root, output_dir, metadata, samples_count):
     metadata["run_inputs_sha256"] = checksum(output_dir / "run-inputs.json")
     metadata["validated_samples"] = samples_count
     metadata["completed_at_utc"] = datetime.now(timezone.utc).isoformat()
+
+
+def validate_build_dependencies(root, dependencies):
+    for name, sha in dependencies.items():
+        directory, extension = name.rsplit(".", 1)
+        filename = "Cargo.lock" if extension == "lock" else f"go.{extension}"
+        require(checksum(root / "._runtime" / directory / filename) == sha, "dependency lock changed during measurement")
 

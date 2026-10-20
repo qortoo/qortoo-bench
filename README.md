@@ -88,5 +88,12 @@ verified central publication context. See [Result export and publication](docs/r
 for the command, environment input, metric/series identity, durable storage policy,
 and local Action compatibility check.
 
-See [Central manual workflow](docs/central-workflow.md) to measure both SDKs on
+See [Central workflow](docs/central-workflow.md) to measure both SDKs on
 GitHub Actions, inspect permanent results, or retry an attempt.
+
+## Automatic SDK main measurements
+
+SDK main push callers send the exact changed SHA to the central workflow. The
+[central workflow guide](docs/central-workflow.md) defines dependency selection,
+credential setup, compatibility checks, the request ledger, and recovery commands.
+SDK PR automation and website result refresh are separate integrations.

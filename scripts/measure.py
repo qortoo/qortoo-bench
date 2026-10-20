@@ -20,6 +20,8 @@ from bench_support import (
     setup_environment,
     stage_native_sdk,
     validate_source,
+    validate_compatibility,
+    validate_build_dependencies,
 )
 from comparison import (
     build_comparison_summary,
@@ -96,6 +98,8 @@ def main():
         "input_files_sha256": input_hashes,
         "components": json.loads((ROOT / "components.json").read_text()),
     }
+    if "request" in lock:
+        metadata["request"] = inputs["request"] = lock["request"]
     (output / "run-inputs.json").write_text(json.dumps(inputs, indent=2) + "\n")
 
     warmup_samples = []
@@ -104,15 +108,20 @@ def main():
     report_md = None
 
     def run(label, command, cwd=ROOT):
+        metadata["failure_phase"] = label
         metadata["commands"].append({"label": label, "argv": list(map(str, command)), "cwd": str(cwd)})
         with (output / f"{label}.stdout.log").open("w") as stdout, (output / f"{label}.stderr.log").open("w") as stderr:
             subprocess.run(command, cwd=cwd, env=env, stdout=stdout, stderr=stderr, check=True)
+        metadata.pop("failure_phase", None)
 
     try:
         run("unit-tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
         prepare_sources(ROOT, lock, args.source_root, run)
         metadata["native_sdk"] = stage_native_sdk(ROOT, env, run)
+        validate_compatibility(ROOT, go, run)
         binaries = build_harnesses(ROOT, resolved, output, env, go, run)
+        metadata["build_dependencies"] = inputs["build_dependencies"] = json.loads((output / "build-dependencies.json").read_text())
+        (output / "run-inputs.json").write_text(json.dumps(inputs, indent=2) + "\n")
 
         # 1. Warmup round (1 discarded round per implementation/scenario)
         print("Executing discarded warmup rounds...", flush=True)
@@ -153,6 +162,7 @@ def main():
 
         for name, source in lock["sources"].items():
             validate_source(ROOT / "_sources" / name, source["sha"])
+        validate_build_dependencies(ROOT, metadata["build_dependencies"])
         for path in input_paths:
             if checksum(path) != input_hashes[str(path.relative_to(ROOT))]:
                 raise RuntimeError(f"input changed during execution: {path}")
