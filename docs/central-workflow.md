@@ -30,13 +30,13 @@ records `incompatible`; build, measurement, and publication failures record
 
 ## Credential setup
 
-Each SDK needs the Actions secret `BENCH_DISPATCH_TOKEN`: a fine-grained PAT or
-GitHub App installation token allowed to dispatch Actions in **qortoo/qortoo-bench**
-(`Actions: write`). Keep its repository scope limited to that destination; the
-caller does not need SDK write access or a result-publishing credential. Tokens
-must be provisioned/rotated through the normal repository or organization secret
-settings, not committed. A missing credential or rejected API request fails the
-SDK notification job with an explicit recovery command.
+Each SDK caller uses its `WORKFLOW_PAT` Actions secret. The token must grant
+`Actions: write` on **qortoo/qortoo-bench** in addition to any repositories
+where that secret is already used. The benchmark caller does not need SDK write
+access or a result-publishing credential. Tokens must be provisioned and rotated
+through repository or organization secret settings, not committed. A missing
+credential or rejected API request fails the SDK notification job with an
+explicit recovery command.
 
 The receiver workflow must be present on central `main` before SDK callers are
 activated. Dispatch acceptance is not proof of measurement or publication success.
