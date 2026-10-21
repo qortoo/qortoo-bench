@@ -2,8 +2,9 @@
   "active_attempt": "39686914503-1",
   "attempts": {
     "39686914503-1": {
+      "detail": "",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39686914503/attempts/1",
-      "status": "running"
+      "status": "published"
     }
   },
   "event": {
@@ -45,6 +46,7 @@
     }
   },
   "request_id": "rust-2bbf97e9ced07e0df77661a8795f8f2a8bb6d79b",
+  "result_run_id": "39686914503-1",
   "schema_version": 1,
-  "status": "running"
+  "status": "published"
 }
