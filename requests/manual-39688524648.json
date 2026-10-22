@@ -1,5 +1,5 @@
 {
-  "active_attempt": "39697387288-1",
+  "active_attempt": "39697659970-1",
   "attempts": {
     "39688524648-1": {
       "detail": "Command '['/opt/hostedtoolcache/go/1.27.2/x64/bin/go', 'test', '-a', '-count=1', '-race', './...']' returned non-zero exit status 1.",
@@ -10,6 +10,10 @@
       "detail": "measurement or publication failed; see attempt logs",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39697387288/attempts/1",
       "status": "cancelled"
+    },
+    "39697659970-1": {
+      "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39697659970/attempts/1",
+      "status": "running"
     }
   },
   "event": {
@@ -44,5 +48,5 @@
   },
   "request_id": "manual-39688524648",
   "schema_version": 1,
-  "status": "cancelled"
+  "status": "running"
 }
