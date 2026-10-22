@@ -61,6 +61,9 @@ def check_toolchains(lock, go_executable, env):
 
 
 def prepare_sources(root, lock, source_root, run_fn):
+    if "candidate" in lock:
+        from candidate_contract import validate_lock
+        validate_lock(lock)
     for name, source in lock["sources"].items():
         path = root / "_sources" / name
         if not path.exists():
@@ -74,8 +77,10 @@ def prepare_sources(root, lock, source_root, run_fn):
     go_source = root / "_sources/go"
     ci = (go_source / ".github/workflows/ci.yml").read_text()
     pins = [line.split(":", 1)[1].strip() for line in ci.splitlines() if line.startswith("  QORTOO_RS_REF:")]
-    if not lock.get("request") and pins != [lock["sources"]["rust"]["sha"]]:
+    if not lock.get("request") and not lock.get("candidate") and pins != [lock["sources"]["rust"]["sha"]]:
         raise RuntimeError("Go CI pin does not match the selected Rust source")
+    if lock.get("candidate") and pins != [lock["candidate"]["go_ci_rust_sha"]]:
+        raise RuntimeError("candidate Go pin differs from the authenticated selection")
     if lock.get("request", {}).get("event", {}).get("kind") == "sdk-main":
         if pins != [lock["request"]["event"]["go_ci_rust_sha"]]:
             raise RuntimeError("Go CI pin changed after request resolution")

@@ -3,7 +3,8 @@
 [Qortoo Bench](https://github.com/qortoo/qortoo-bench) owns official workloads,
 measurement runs, the request ledger, and result history. SDK `main` push callers
 only dispatch inputs; they never check out or execute SDK code with a dispatch
-credential. Pull-request automation is not provided by these callers.
+credential. This guide covers official main/manual runs. [PR candidate measurements](pr-candidates.md)
+use a separate receiver and never publish official results.
 
 ## Source selection
 

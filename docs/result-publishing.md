@@ -72,6 +72,9 @@ python3 scripts/export_results.py results/<run-id> \
 The default channel is `exploratory`. Official export additionally requires
 `--channel official --run-url https://github.com/qortoo/qortoo-bench/actions/runs/<id>`
 and successful full measurements with a clean, committed harness baseline.
+PR measurements use the separate `candidate` channel and carry base/head provenance.
+The exporter refuses promotion of these runs to either official or exploratory
+data, and the official publisher rejects candidate bundles. See [PR candidates](pr-candidates.md).
 Channel eligibility does not prove that a request came from an allowed main
 revision: the trusted publisher verifies event/source provenance separately.
 PR candidates, dirty runs, smoke runs, and failed runs never enter official latest

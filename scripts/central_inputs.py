@@ -27,12 +27,21 @@ def resolve(lock, rust_sha="", go_sha=""):
     return result
 
 
+def cpu_identity(text, fallback=""):
+    fields = [line.split(":", 1) for line in text.splitlines() if ":" in line]
+    values = {key.strip(): value.strip() for key, value in fields}
+    for key in ("model name", "Hardware", "Processor"):
+        if values.get(key):
+            return values[key]
+    if values.get("CPU implementer") and values.get("CPU part"):
+        return "; ".join(f"{key}={values[key]}" for key in ("CPU implementer", "CPU architecture", "CPU variant", "CPU part", "CPU revision") if key in values)
+    require(bool(fallback), "CPU identity unavailable")
+    return fallback
+
+
 def environment():
-    cpu = platform.processor()
     cpuinfo = Path("/proc/cpuinfo")
-    if cpuinfo.exists():
-        cpu = next((line.split(":", 1)[1].strip() for line in cpuinfo.read_text().splitlines() if line.startswith("model name")), cpu)
-    require(bool(cpu), "CPU identity unavailable")
+    cpu = cpu_identity(cpuinfo.read_text() if cpuinfo.exists() else "", platform.processor())
     image = os.environ.get("ImageOS", "unknown-image")
     return {"id": f"github-hosted-{image}", "os": platform.platform(), "arch": platform.machine(),
             "cpu": cpu, "runner": f"GitHub hosted {image}; {os.cpu_count()} logical CPUs"}
