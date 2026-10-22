@@ -1,10 +1,14 @@
 {
-  "active_attempt": "39688524648-1",
+  "active_attempt": "39697387288-1",
   "attempts": {
     "39688524648-1": {
       "detail": "Command '['/opt/hostedtoolcache/go/1.27.2/x64/bin/go', 'test', '-a', '-count=1', '-race', './...']' returned non-zero exit status 1.",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39688524648/attempts/1",
       "status": "incompatible"
+    },
+    "39697387288-1": {
+      "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39697387288/attempts/1",
+      "status": "running"
     }
   },
   "event": {
@@ -39,5 +43,5 @@
   },
   "request_id": "manual-39688524648",
   "schema_version": 1,
-  "status": "incompatible"
+  "status": "running"
 }
