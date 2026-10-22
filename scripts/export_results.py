@@ -90,6 +90,7 @@ def validate_run(run_dir, environment, channel, run_url, raw):
     for key in ("sources", "build_profile", "rust_features", "input_files_sha256"):
         require(inputs[key] == metadata[key], f"metadata/input mismatch: {key}")
     require(inputs.get("request") == metadata.get("request"), "request provenance mismatch")
+    require(inputs.get("candidate") == metadata.get("candidate"), "candidate provenance mismatch")
     require(inputs.get("build_dependencies") == metadata.get("build_dependencies"), "dependency provenance mismatch")
     for name, sha in inputs.get("build_dependencies", {}).items():
         require(re.fullmatch(r"(?:rust-[0-9]+\.lock|go-[0-9]+\.(?:mod|sum))", name), "invalid dependency snapshot name")
@@ -104,7 +105,14 @@ def validate_run(run_dir, environment, channel, run_url, raw):
     for key in ("id", "os", "arch", "cpu", "runner"):
         require(isinstance(environment.get(key), str) and bool(environment[key].strip()), f"missing environment {key}")
     require(environment["os"] == metadata["platform"], "environment OS does not match measured platform")
-    require(channel in {"official", "exploratory"}, "unsupported channel")
+    require(channel in {"official", "exploratory", "candidate"}, "unsupported channel")
+    if "candidate" in metadata:
+        require(channel == "candidate" and metadata["performance_baseline"] is False, "PR results cannot be promoted to official data")
+        from candidate_contract import validate_lock
+        validate_lock({"candidate": metadata["candidate"], "sources": inputs["sources"],
+                       "profile": inputs["build_profile"], "rust_features": inputs["rust_features"]})
+    if channel == "candidate":
+        require(metadata.get("candidate") and metadata["performance_baseline"] is False, "candidate export requires PR provenance")
     if channel == "official":
         require(metadata.get("environment") == environment, "official export requires measurement-host environment")
         require(metadata["performance_baseline"] is True and metadata["harness_dirty"] is False, "official export requires a clean baseline")
@@ -178,6 +186,8 @@ def export_run(run_dir, output, environment, channel="exploratory", run_url=None
     }
     if "request" in metadata:
         provenance["request"] = metadata["request"]
+    if "candidate" in metadata:
+        provenance["candidate"] = metadata["candidate"]
     if "build_dependencies" in metadata:
         provenance["build_dependencies"] = metadata["build_dependencies"]
     summary = {"schema_version": 1, **provenance, "native_sdk": metadata["native_sdk"], "suites": []}
@@ -228,7 +238,7 @@ def main():
     parser.add_argument("run", type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--environment", required=True, type=Path)
-    parser.add_argument("--channel", choices=("exploratory", "official"), default="exploratory")
+    parser.add_argument("--channel", choices=("exploratory", "official", "candidate"), default="exploratory")
     parser.add_argument("--run-url")
     args = parser.parse_args()
     manifest = export_run(args.run, args.output, json.loads(args.environment.read_text()), args.channel, args.run_url)

@@ -96,4 +96,6 @@ GitHub Actions, inspect permanent results, or retry an attempt.
 SDK main push callers send the exact changed SHA to the central workflow. The
 [central workflow guide](docs/central-workflow.md) defines dependency selection,
 credential setup, compatibility checks, the request ledger, and recovery commands.
-SDK PR automation and website result refresh are separate integrations.
+PR opened/reopened/head updates use the separate [candidate comparison workflow](docs/pr-candidates.md).
+Candidate execution requires Docker and keeps base/head comparisons out of official
+history. Website result refresh is a separate integration.
