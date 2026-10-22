@@ -7,8 +7,9 @@
       "status": "incompatible"
     },
     "39697387288-1": {
+      "detail": "measurement or publication failed; see attempt logs",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39697387288/attempts/1",
-      "status": "running"
+      "status": "cancelled"
     }
   },
   "event": {
@@ -43,5 +44,5 @@
   },
   "request_id": "manual-39688524648",
   "schema_version": 1,
-  "status": "running"
+  "status": "cancelled"
 }
