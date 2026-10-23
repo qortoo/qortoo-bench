@@ -2,8 +2,9 @@
   "active_attempt": "39940536705-1",
   "attempts": {
     "39940536705-1": {
+      "detail": "measurement or publication failed; see attempt logs",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39940536705/attempts/1",
-      "status": "running"
+      "status": "cancelled"
     }
   },
   "event": {
@@ -38,5 +39,5 @@
   },
   "request_id": "manual-39940536705",
   "schema_version": 1,
-  "status": "running"
+  "status": "cancelled"
 }
