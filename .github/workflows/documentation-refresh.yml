@@ -1,0 +1,47 @@
+name: Refresh benchmark documentation
+
+on:
+  workflow_run:
+    workflows: [Central benchmark]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    if: github.repository == 'qortoo/qortoo-bench' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check refresh credential
+        env:
+          WORKFLOW_PAT: ${{ secrets.WORKFLOW_PAT }}
+        run: |
+          if [ -z "$WORKFLOW_PAT" ]; then
+            echo '::error::Configure WORKFLOW_PAT with Actions write access to qortoo/qortoo.'
+            exit 1
+          fi
+      # No benchmark or SDK code/artifacts execute in this credential-bearing job.
+      # Failed requests also refresh the status while retaining successful results.
+      - name: Request documentation refresh from durable data
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.WORKFLOW_PAT }}
+          script: |
+            if (context.eventName === 'workflow_run') {
+              const run = context.payload.workflow_run;
+              if (run.repository.full_name !== 'qortoo/qortoo-bench' || run.head_repository.full_name !== 'qortoo/qortoo-bench' ||
+                  run.path !== '.github/workflows/benchmark.yml' || run.head_branch !== 'main' || run.event !== 'workflow_dispatch') {
+                core.setFailed('Unexpected benchmark workflow origin');
+                return;
+              }
+            }
+            const response = await github.rest.actions.createWorkflowDispatch({
+              owner: 'qortoo', repo: 'qortoo', workflow_id: 'docs.yml', ref: 'main',
+              inputs: { candidate_sdk: 'none' },
+            });
+            core.info(`Documentation refresh accepted (HTTP ${response.status}). Deployment is verified by qortoo/docs.yml.`);
+            await core.summary.addRaw('Requested a documentation refresh from the latest durable benchmark snapshot. This does not rerun measurements.').write();
