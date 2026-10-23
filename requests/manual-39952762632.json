@@ -1,0 +1,42 @@
+{
+  "active_attempt": "39952762632-1",
+  "attempts": {
+    "39952762632-1": {
+      "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39952762632/attempts/1",
+      "status": "running"
+    }
+  },
+  "event": {
+    "kind": "manual"
+  },
+  "lock": {
+    "profile": "release",
+    "request": {
+      "event": {
+        "kind": "manual"
+      },
+      "request_id": "manual-39952762632"
+    },
+    "rust_features": [
+      "observability"
+    ],
+    "schema_version": 1,
+    "sources": {
+      "go": {
+        "repository": "https://github.com/qortoo/qortoo-go.git",
+        "sha": "6286a006a42c08276cdfb9013f1b605c5cd8cbdb"
+      },
+      "rust": {
+        "repository": "https://github.com/qortoo/qortoo-rs.git",
+        "sha": "99958dfce761f9f0cd1038ede186ac45bf19bac1"
+      }
+    },
+    "toolchains": {
+      "go": "1.27.2",
+      "rust": "1.97.1"
+    }
+  },
+  "request_id": "manual-39952762632",
+  "schema_version": 1,
+  "status": "running"
+}
