@@ -62,7 +62,10 @@ jobs:
     concurrency:
       group: candidate-${{ inputs.source_component }}-${{ inputs.source_pr }}-${{ inputs.source_sha }}
       cancel-in-progress: true
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-4-ubuntu-2404
+    env:
+      BENCH_RUNNER_PROVIDER: ubicloud
+      BENCH_RUNNER_IMAGE: ubuntu24
     timeout-minutes: 90
     permissions: {}
     steps:

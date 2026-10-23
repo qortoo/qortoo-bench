@@ -42,9 +42,12 @@ def cpu_identity(text, fallback=""):
 def environment():
     cpuinfo = Path("/proc/cpuinfo")
     cpu = cpu_identity(cpuinfo.read_text() if cpuinfo.exists() else "", platform.processor())
-    image = os.environ.get("ImageOS", "unknown-image")
-    return {"id": f"github-hosted-{image}", "os": platform.platform(), "arch": platform.machine(),
-            "cpu": cpu, "runner": f"GitHub hosted {image}; {os.cpu_count()} logical CPUs"}
+    image = os.environ.get("BENCH_RUNNER_IMAGE", os.environ.get("ImageOS", "unknown-image"))
+    provider = os.environ.get("BENCH_RUNNER_PROVIDER", "github-hosted")
+    labels = {"github-hosted": "GitHub hosted", "ubicloud": "Ubicloud"}
+    require(provider in labels, "unsupported runner provider")
+    return {"id": f"{provider}-{image}", "os": platform.platform(), "arch": platform.machine(),
+            "cpu": cpu, "runner": f"{labels[provider]} {image}; {os.cpu_count()} logical CPUs"}
 
 
 def main():

@@ -73,7 +73,10 @@ jobs:
   measure:
     needs: request
     if: needs.request.outputs.should_run == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ubicloud-standard-4-ubuntu-2404
+    env:
+      BENCH_RUNNER_PROVIDER: ubicloud
+      BENCH_RUNNER_IMAGE: ubuntu24
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
