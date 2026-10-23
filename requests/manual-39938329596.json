@@ -7,8 +7,9 @@
       "status": "failed"
     },
     "39938943655-1": {
+      "detail": "",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39938943655/attempts/1",
-      "status": "running"
+      "status": "published"
     }
   },
   "event": {
@@ -42,6 +43,7 @@
     }
   },
   "request_id": "manual-39938329596",
+  "result_run_id": "39938943655-1",
   "schema_version": 1,
-  "status": "running"
+  "status": "published"
 }
