@@ -1,9 +1,11 @@
 import base64
 from copy import deepcopy
 import json
+import os
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -150,6 +152,7 @@ class CandidateTests(unittest.TestCase):
             self.assertEqual([row[1] for row in selected[:2]], ['base', 'head'] if r % 2 == 0 else ['head', 'base'])
             self.assertEqual(selected[0][2:], selected[1][2:])
 
+    @patch.dict(os.environ, {}, clear=True)
     def test_candidate_containers_have_no_host_writable_or_credential_mount(self):
         argv = docker_command('fixture', 'sha256:fixture', '/public/selection.json')
         self.assertIn('--read-only', argv)
