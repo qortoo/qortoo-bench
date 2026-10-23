@@ -1,10 +1,14 @@
 {
-  "active_attempt": "39938329596-1",
+  "active_attempt": "39938943655-1",
   "attempts": {
     "39938329596-1": {
       "detail": "Command '['/usr/bin/python3', '-m', 'unittest', 'discover', '-s', 'tests', '-v']' returned non-zero exit status 1.",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39938329596/attempts/1",
       "status": "failed"
+    },
+    "39938943655-1": {
+      "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39938943655/attempts/1",
+      "status": "running"
     }
   },
   "event": {
@@ -39,5 +43,5 @@
   },
   "request_id": "manual-39938329596",
   "schema_version": 1,
-  "status": "failed"
+  "status": "running"
 }
