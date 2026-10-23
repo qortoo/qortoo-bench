@@ -1,0 +1,50 @@
+{
+  "active_attempt": "39949543803-1",
+  "attempts": {
+    "39949543803-1": {
+      "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/39949543803/attempts/1",
+      "status": "running"
+    }
+  },
+  "event": {
+    "component": "go",
+    "go_ci_rust_sha": "99958dfce761f9f0cd1038ede186ac45bf19bac1",
+    "kind": "sdk-main",
+    "sha": "6286a006a42c08276cdfb9013f1b605c5cd8cbdb",
+    "source_run_url": "https://github.com/qortoo/qortoo-go/actions/runs/39949528352"
+  },
+  "lock": {
+    "profile": "release",
+    "request": {
+      "event": {
+        "component": "go",
+        "go_ci_rust_sha": "99958dfce761f9f0cd1038ede186ac45bf19bac1",
+        "kind": "sdk-main",
+        "sha": "6286a006a42c08276cdfb9013f1b605c5cd8cbdb",
+        "source_run_url": "https://github.com/qortoo/qortoo-go/actions/runs/39949528352"
+      },
+      "request_id": "go-6286a006a42c08276cdfb9013f1b605c5cd8cbdb"
+    },
+    "rust_features": [
+      "observability"
+    ],
+    "schema_version": 1,
+    "sources": {
+      "go": {
+        "repository": "https://github.com/qortoo/qortoo-go.git",
+        "sha": "6286a006a42c08276cdfb9013f1b605c5cd8cbdb"
+      },
+      "rust": {
+        "repository": "https://github.com/qortoo/qortoo-rs.git",
+        "sha": "99958dfce761f9f0cd1038ede186ac45bf19bac1"
+      }
+    },
+    "toolchains": {
+      "go": "1.27.2",
+      "rust": "1.97.1"
+    }
+  },
+  "request_id": "go-6286a006a42c08276cdfb9013f1b605c5cd8cbdb",
+  "schema_version": 1,
+  "status": "running"
+}
