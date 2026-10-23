@@ -48,6 +48,11 @@ reject arbitrary repository URLs.
 
 ## Measurement isolation and ordering
 
+The comparison job uses the same Ubicloud 4 vCPU Ubuntu 24.04 runner label and
+account-level fleet selection as [official measurements](central-workflow.md#measurement-and-publication).
+Only public runner provider/image identity is forwarded into the containers;
+CPU and OS are observed inside each container.
+
 The runner builds one trusted Docker image with the locked Rust/Go toolchain
 versions and the central harness. Both legs use that exact image ID. Each leg has
 its own disposable non-root container, read-only image filesystem, private work

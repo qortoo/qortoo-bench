@@ -46,7 +46,12 @@ def schedule(resolved, rounds=10):
 
 
 def docker_command(name, image, selected):
-    return ['docker', 'run', '-d', '--name', name, '--read-only', '--user', '1000:1000',
+    # Forward only public runner identity, never the host environment or credentials.
+    identity_env = []
+    for key in ('BENCH_RUNNER_PROVIDER', 'BENCH_RUNNER_IMAGE'):
+        if key in os.environ:
+            identity_env.extend(['--env', f'{key}={os.environ[key]}'])
+    return ['docker', 'run', '-d', '--name', name, *identity_env, '--read-only', '--user', '1000:1000',
             '--cap-drop=ALL', '--security-opt=no-new-privileges', '--pids-limit=512', '--memory=4g', '--cpus=2',
             '--mount', 'type=volume,dst=/work', '--mount', 'type=volume,dst=/results',
             '--tmpfs', '/tmp:rw,noexec,size=512m', '--mount', f'type=bind,src={selected},dst=/input/selection.json,readonly', image]

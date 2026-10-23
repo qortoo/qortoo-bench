@@ -79,7 +79,8 @@ as failed central jobs and can be resubmitted using the same source event.
 
 ## Measurement and publication
 
-Both SDKs run on one fresh `ubuntu-24.04` runner with Rust 1.97.1, Go 1.27.2,
+Both SDKs run on one fresh Ubicloud x64 Ubuntu 24.04 runner
+(`ubicloud-standard-4-ubuntu-2404`, 4 vCPU, 16 GB RAM) with Rust 1.97.1, Go 1.27.2,
 release builds and `observability`. Forced Go rebuilds precede measurements. Rust harness builds use a runtime copy
 seeded with the selected SDK Cargo.lock, resolved with `cargo update --workspace`
 and then built with `--locked`. Runtime Go adapters resolve their module graph
@@ -91,6 +92,17 @@ One warmup and ten alternating measured rounds produce 34 warmup and 340 measure
 samples. CPU model/count, runner image, architecture, and OS/kernel are captured
 on the measurement host. Different environments form separate series; a shared
 hosted label does not guarantee comparable hardware or stable timing.
+
+The Ubicloud GitHub App must be enabled for `qortoo-bench`. The runner label
+selects size and OS; the account-level **Enable Premium Runners** setting selects
+the fleet. Disable it to request Standard CPUs. With Premium enabled, Ubicloud
+may fall back to Standard when capacity is busy. The label alone does not pin a
+CPU model. Runner images also receive provider updates. See the
+[Ubicloud runner documentation](https://www.ubicloud.com/docs/github-actions-integration/runner-types).
+Only measurement and PR comparison use Ubicloud; request registration,
+publication, failure recording, and harness validation use GitHub-hosted runners.
+Results record the Ubicloud provider and actual CPU/OS; they form separate series
+from GitHub-hosted measurements.
 
 Request registration has repository write permission but never executes SDK code.
 Measurement has `contents: read`, no persisted checkout credentials, and no
