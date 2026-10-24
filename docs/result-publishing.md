@@ -196,8 +196,19 @@ contract and series identity, environment, measurement date, and Actions/raw lin
 Use only official eligible latest pointers for public current results. On failure,
 retain the previous successful revision/date; if none exists, show no measurement.
 Record the data commit, run ID, summary hash, contract hash and SDK revisions in
-the website's generated source manifest. Actual website implementation is a
-separate integration stage.
+the website's generated source manifest. The website validates index shards and
+bundle manifest/summary hashes before generating its Performance tables and
+series-specific charts.
+
+`documentation-refresh.yml` runs after the central main benchmark completes,
+including failed requests so the website can refresh status without replacing
+successful values. It dispatches `qortoo/qortoo`'s `docs.yml` using `WORKFLOW_PAT`
+with Actions write access to that repository. The job executes no SDK code or
+downloaded artifacts. Merge the website integration before enabling this caller.
+The website resolves the current data tip itself; notifications do not select
+results. Dispatch acceptance is not deployment success. A manual run of the
+refresh workflow retries documentation publication without rerunning benchmarks.
+See the website's `docs/benchmark-results.md` for collection and display rules.
 
 ## Reproduce the Action compatibility check
 
