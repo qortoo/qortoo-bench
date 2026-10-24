@@ -1,5 +1,7 @@
 # Central benchmark workflow
 
+For the shared workflow overview and result locations, see [Performance](performance.md).
+
 [Qortoo Bench](https://github.com/qortoo/qortoo-bench) owns official workloads,
 measurement runs, the request ledger, and result history. SDK `main` push callers
 only dispatch inputs; they never check out or execute SDK code with a dispatch
