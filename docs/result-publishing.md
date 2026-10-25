@@ -239,4 +239,7 @@ The canonical resolved source lock and attempt outcomes live in `requests/` on
 `bench-data`. Successful publication updates the request outcome in the same Git
 commit as immutable bundles and indexes. Failed/incompatible attempts retain the
 previous successful latest pointers. Duplicate published requests do not append
-history. See the [central workflow guide](central-workflow.md) for retries.
+history. Active duplicates do not create another attempt. An abandoned attempt
+can be reclaimed after the Actions API confirms it completed; a late finalizer
+cannot overwrite a newer attempt or successful publication. See the
+[central workflow guide](central-workflow.md) for retries.
