@@ -1,5 +1,7 @@
 # PR candidate measurements
 
+For the shared workflow overview and result locations, see [Performance](performance.md).
+
 A candidate measurement compares a Qortoo SDK pull request's exact head with a
 fixed base revision. Qortoo Bench owns the runner, contracts, comparison, and
 artifacts. Candidate results are review evidence; they cannot advance official
@@ -49,7 +51,7 @@ reject arbitrary repository URLs.
 ## Measurement isolation and ordering
 
 The comparison job uses the same Ubicloud 4 vCPU Ubuntu 24.04 runner label and
-account-level fleet selection as [official measurements](central-workflow.md#measurement-and-publication).
+account-level fleet selection as [official measurements](central-workflow.md#set-up-access-and-runners).
 Only public runner provider/image identity is forwarded into the containers;
 CPU and OS are observed inside each container.
 

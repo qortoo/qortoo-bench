@@ -4,6 +4,9 @@ Central benchmark harnesses for Qortoo components. Counter and Variable suites
 run through the Rust SDK and Go binding's public APIs. Both languages consume
 the same suite-specific JSON contracts.
 
+Start with the [Performance guide](docs/performance.md) for workflow triggers,
+result locations, and measurement interpretation.
+
 ## Requirements
 
 - Git, Make, Python 3.9 or newer, and a C compiler.
