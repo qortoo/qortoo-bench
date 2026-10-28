@@ -494,6 +494,39 @@
         "path": "runs/40166916022-1/summary.json",
         "sha256": "fd64815eaceec69d15ee1e782725d1e974901734e5c87c06621ace4311ab2c95"
       }
+    },
+    "40695556444-1": {
+      "channel": "official",
+      "eligible_for_latest": true,
+      "manifest": {
+        "path": "runs/40695556444-1/manifest.json",
+        "sha256": "cb44dfe4501368e7e8b367ab021f7bcee653b592f3d2461c7e374b5c4fee4ff8"
+      },
+      "request_order": [
+        40695556444,
+        1
+      ],
+      "run_id": "40695556444-1",
+      "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/40695556444/attempts/1",
+      "schema_version": 1,
+      "series_ids": [
+        "official/counter/d8a194f6b564395dc66b22bbfa4c306aa72058ee2db2f42d2a186eb57be0e0f0",
+        "official/variable/07a743c1e54ab176e2dfe1c4c29543e98233f5e7aab2b0799a61e9daa9619525"
+      ],
+      "sources": {
+        "go": {
+          "repository": "https://github.com/qortoo/qortoo-go.git",
+          "sha": "a9a9121ee5613804d14211f48a4e1c8ae3ce8980"
+        },
+        "rust": {
+          "repository": "https://github.com/qortoo/qortoo-rs.git",
+          "sha": "e6e8ee8665399fffcb3635a42da45bcc3f095a4d"
+        }
+      },
+      "summary": {
+        "path": "runs/40695556444-1/summary.json",
+        "sha256": "2947cc1cfce04e3a7873041e0952aa011578ae65a3a42906c515b1ac01278fe7"
+      }
     }
   },
   "schema_version": 1
