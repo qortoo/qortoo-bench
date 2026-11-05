@@ -1,0 +1,40 @@
+name: Assign Author
+
+# Reviewer requests are handled natively by .github/CODEOWNERS; this workflow
+# only assigns the PR author as assignee. Do not check out or execute PR code.
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  assign:
+    name: Assign author as assignee
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign author as assignee
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pullRequest = context.payload.pull_request;
+            const author = pullRequest.user.login;
+
+            if (/\[bot\]$/i.test(author)) {
+              core.notice(`Skipping bot author ${author}.`);
+              return;
+            }
+
+            try {
+              await github.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number: pullRequest.number,
+                assignees: [author],
+              });
+            } catch (error) {
+              core.setFailed(`Could not assign ${author}: ${error.message}`);
+            }
