@@ -1,0 +1,3 @@
+# Request a review from the owning team for every non-draft pull request.
+# GitHub reads CODEOWNERS from the pull request's base branch.
+* @qortoo/qortoo_admin
