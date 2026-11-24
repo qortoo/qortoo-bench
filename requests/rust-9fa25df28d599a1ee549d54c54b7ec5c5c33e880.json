@@ -2,8 +2,9 @@
   "active_attempt": "45488153469-1",
   "attempts": {
     "45488153469-1": {
+      "detail": "Command '['/home/runner/work/qortoo-bench/qortoo-bench/._runtime/rust-0/target/release/counter', '/home/runner/work/qortoo-bench/qortoo-bench/contracts/counter.json', 'full', 'IncreaseBy']' returned non-zero exit status 101.",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/45488153469/attempts/1",
-      "status": "running"
+      "status": "failed"
     }
   },
   "event": {
@@ -46,5 +47,5 @@
   },
   "request_id": "rust-9fa25df28d599a1ee549d54c54b7ec5c5c33e880",
   "schema_version": 1,
-  "status": "running"
+  "status": "failed"
 }
