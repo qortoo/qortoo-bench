@@ -1,0 +1,616 @@
+{
+  "build_dependencies": {
+    "go-0.mod": "852fea15fa4e3f0cd3fc51c7f4293f08380c337a9910377a7ac3f4315609fe18",
+    "go-0.sum": "1ed8f87f0d6dca52501c920c3aa156f47fe5ccf418e20b70da08d67d15252d75",
+    "rust-0.lock": "f4cd6a4dfdfe78ab92f8643ec8ccf155d150621bbae25d65813a0c3734111973"
+  },
+  "channel": "official",
+  "completed_at_utc": "2026-11-25T14:10:31.010891+00:00",
+  "environment": {
+    "arch": "x86_64",
+    "cpu": "AMD EPYC 9R45",
+    "id": "ubicloud-ubuntu24",
+    "os": "Linux-6.14.0-1018-aws-x86_64-with-glibc2.39",
+    "runner": "Ubicloud ubuntu24; 4 logical CPUs"
+  },
+  "environment_provenance": "measurement-host",
+  "harness_dirty": false,
+  "harness_sha": "90c62f83eb2be87165f486cbe03137b43d8ee4d5",
+  "measurement_baseline": true,
+  "native_sdk": {
+    "header_sha256": "501d4d78a88ee1892ee3a19772e75cebf602c3f2e4514b433b76a9005e77b820",
+    "library_sha256": "06d233b3ed8ec3358df0e50150f8cd406fcf4e83bb976d07eb5d7dfb89bd49b1",
+    "manifest": {
+      "abi_version_major": 1,
+      "abi_version_minor": 0,
+      "profile": "release",
+      "sdk_version": "0.1.0",
+      "target": "x86_64-unknown-linux-gnu"
+    }
+  },
+  "performance_baseline": true,
+  "request": {
+    "event": {
+      "kind": "manual"
+    },
+    "request_id": "manual-45630459535"
+  },
+  "run_id": "45630459535-1",
+  "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/45630459535/attempts/1",
+  "schema_version": 1,
+  "sources": {
+    "go": {
+      "repository": "https://github.com/qortoo/qortoo-go.git",
+      "sha": "e54206f329bbbb5fd7852e1de41c68f1a12e9d66"
+    },
+    "rust": {
+      "repository": "https://github.com/qortoo/qortoo-rs.git",
+      "sha": "859bb8330d4ffc74241437b7ef4e9685b7bd7ba6"
+    }
+  },
+  "started_at_utc": "20261125T140836Z",
+  "suites": [
+    {
+      "contract_id": "counter/v1",
+      "metric": {
+        "direction": "smaller",
+        "id": "latency",
+        "unit": "ns/op"
+      },
+      "scenarios": [
+        {
+          "budget": 200000,
+          "diff_median_ns_per_op": 59.75874500000009,
+          "go": {
+            "count": 10,
+            "max": 401.682095,
+            "mean": 386.2277375,
+            "median": 388.00714500000004,
+            "min": 369.901165,
+            "p95": 401.682095,
+            "stddev": 12.009042202016708
+          },
+          "ratio_median": 1.182053423565812,
+          "rust": {
+            "count": 10,
+            "max": 332.2444,
+            "mean": 327.034629,
+            "median": 328.24839999999995,
+            "min": 316.91516,
+            "p95": 332.2444,
+            "stddev": 4.35670272858627
+          },
+          "scenario_id": "IncreaseBy"
+        },
+        {
+          "budget": 2000000,
+          "diff_median_ns_per_op": 24.448771999999998,
+          "go": {
+            "count": 10,
+            "max": 34.5824125,
+            "mean": 34.24656515,
+            "median": 34.239808,
+            "min": 33.8791735,
+            "p95": 34.5824125,
+            "stddev": 0.20190870049989937
+          },
+          "ratio_median": 3.4970566955325255,
+          "rust": {
+            "count": 10,
+            "max": 9.8253365,
+            "mean": 9.794234,
+            "median": 9.791036,
+            "min": 9.7705805,
+            "p95": 9.8253365,
+            "stddev": 0.016594922603682907
+          },
+          "scenario_id": "GetValue"
+        },
+        {
+          "budget": 20000,
+          "diff_median_ns_per_op": 1055.85655,
+          "go": {
+            "count": 10,
+            "max": 3230.4115,
+            "mean": 3178.690725,
+            "median": 3168.296125,
+            "min": 3121.1193,
+            "p95": 3230.4115,
+            "stddev": 37.54990855407011
+          },
+          "ratio_median": 1.4998280483360098,
+          "rust": {
+            "count": 10,
+            "max": 2208.7216,
+            "mean": 2120.36478,
+            "median": 2112.439575,
+            "min": 2091.02545,
+            "p95": 2208.7216,
+            "stddev": 33.336275390974436
+          },
+          "scenario_id": "Transaction"
+        },
+        {
+          "budget": 20000,
+          "diff_median_ns_per_op": -4.869275000000016,
+          "go": {
+            "count": 10,
+            "max": 5966.32355,
+            "mean": 5849.94919,
+            "median": 5838.8786,
+            "min": 5794.11415,
+            "p95": 5966.32355,
+            "stddev": 49.14662607809298
+          },
+          "ratio_median": 0.9991667547772156,
+          "rust": {
+            "count": 10,
+            "max": 5903.7432,
+            "mean": 5847.4828,
+            "median": 5843.747875,
+            "min": 5792.09255,
+            "p95": 5903.7432,
+            "stddev": 35.82572670484161
+          },
+          "scenario_id": "SyncLocal"
+        },
+        {
+          "budget": 100,
+          "diff_median_ns_per_op": -2922.1649999999972,
+          "go": {
+            "count": 10,
+            "max": 13574.48,
+            "mean": 12581.433,
+            "median": 12524.470000000001,
+            "min": 11579.97,
+            "p95": 13574.48,
+            "stddev": 645.675200323059
+          },
+          "ratio_median": 0.8108219039292378,
+          "rust": {
+            "count": 10,
+            "max": 16489.19,
+            "mean": 15303.057,
+            "median": 15446.634999999998,
+            "min": 13988.88,
+            "p95": 16489.19,
+            "stddev": 762.0682628661147
+          },
+          "scenario_id": "BuildCounter"
+        }
+      ],
+      "series_definition": {
+        "build_dependencies": {
+          "go-0.mod": "852fea15fa4e3f0cd3fc51c7f4293f08380c337a9910377a7ac3f4315609fe18",
+          "go-0.sum": "1ed8f87f0d6dca52501c920c3aa156f47fe5ccf418e20b70da08d67d15252d75",
+          "rust-0.lock": "f4cd6a4dfdfe78ab92f8643ec8ccf155d150621bbae25d65813a0c3734111973"
+        },
+        "build_profile": "release",
+        "contract_sha256": "281a6813947370b14fc8259de1af4abe36095dc782b118feef2376df2dd3e6ed",
+        "environment": {
+          "arch": "x86_64",
+          "cpu": "AMD EPYC 9R45",
+          "id": "ubicloud-ubuntu24",
+          "os": "Linux-6.14.0-1018-aws-x86_64-with-glibc2.39",
+          "runner": "Ubicloud ubuntu24; 4 logical CPUs"
+        },
+        "go": "go version go1.27.2 linux/amd64",
+        "profile": "full",
+        "protocol": "qortoo-public-api-round-mean/v1",
+        "rust_features": [
+          "observability"
+        ],
+        "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+        "source_repositories": {
+          "go": "https://github.com/qortoo/qortoo-go.git",
+          "rust": "https://github.com/qortoo/qortoo-rs.git"
+        },
+        "suite": {
+          "contract": "contracts/counter.json",
+          "id": "counter",
+          "implementations": {
+            "go": {
+              "component": "go-sdk",
+              "executable": "sdk",
+              "harness": "harnesses/go"
+            },
+            "rust": {
+              "component": "rust-sdk",
+              "executable": "counter",
+              "harness": "harnesses/rust"
+            }
+          },
+          "metric": {
+            "direction": "smaller",
+            "id": "latency",
+            "unit": "ns/op"
+          },
+          "schema_version": 1
+        },
+        "toolchains": {
+          "go": "1.27.2",
+          "rust": "1.97.1"
+        }
+      },
+      "series_id": "official/counter/7a2f1ec316a8174911f8ad90e5f923aea1e38fde6d52e14a0fd2e366a0c11075",
+      "suite_id": "counter"
+    },
+    {
+      "contract_id": "variable/v1",
+      "metric": {
+        "direction": "smaller",
+        "id": "latency",
+        "unit": "ns/op"
+      },
+      "scenarios": [
+        {
+          "budget": 4000,
+          "diff_median_ns_per_op": 1526.38125,
+          "go": {
+            "count": 10,
+            "max": 2335.441,
+            "mean": 2163.2341,
+            "median": 2145.19125,
+            "min": 2078.35175,
+            "p95": 2335.441,
+            "stddev": 79.65520178122915
+          },
+          "operation": "Set",
+          "payload": "64B",
+          "ratio_median": 3.4666395985843796,
+          "rust": {
+            "count": 10,
+            "max": 1130.3465,
+            "mean": 682.050975,
+            "median": 618.81,
+            "min": 589.8385,
+            "p95": 1130.3465,
+            "stddev": 166.16231019750816
+          },
+          "scenario_id": "Set-64B"
+        },
+        {
+          "budget": 100000,
+          "diff_median_ns_per_op": 616.6967750000001,
+          "go": {
+            "count": 10,
+            "max": 712.06937,
+            "mean": 707.593674,
+            "median": 707.815045,
+            "min": 702.33031,
+            "p95": 712.06937,
+            "stddev": 3.2764188648929795
+          },
+          "operation": "Get",
+          "payload": "64B",
+          "ratio_median": 7.7680913498467445,
+          "rust": {
+            "count": 10,
+            "max": 93.03134,
+            "mean": 91.183701,
+            "median": 91.11827,
+            "min": 89.77691,
+            "p95": 93.03134,
+            "stddev": 0.8860537560247431
+          },
+          "scenario_id": "Get-64B"
+        },
+        {
+          "budget": 400,
+          "diff_median_ns_per_op": 15973.742500000002,
+          "go": {
+            "count": 10,
+            "max": 22542.7325,
+            "mean": 21339.4845,
+            "median": 21143.510000000002,
+            "min": 20592.9925,
+            "p95": 22542.7325,
+            "stddev": 650.4019753250031
+          },
+          "operation": "Transaction",
+          "payload": "64B",
+          "ratio_median": 4.089837695795798,
+          "rust": {
+            "count": 10,
+            "max": 5320.305,
+            "mean": 5184.71925,
+            "median": 5169.7675,
+            "min": 5100.78,
+            "p95": 5320.305,
+            "stddev": 80.08741352812565
+          },
+          "scenario_id": "Transaction-64B"
+        },
+        {
+          "budget": 4000,
+          "diff_median_ns_per_op": 2193.83525,
+          "go": {
+            "count": 10,
+            "max": 7773.4565,
+            "mean": 7627.174,
+            "median": 7618.564875,
+            "min": 7480.803,
+            "p95": 7773.4565,
+            "stddev": 81.6537118776777
+          },
+          "operation": "SyncLocal",
+          "payload": "64B",
+          "ratio_median": 1.4044137499295184,
+          "rust": {
+            "count": 10,
+            "max": 5483.78825,
+            "mean": 5422.7894,
+            "median": 5424.729625,
+            "min": 5352.5605,
+            "p95": 5483.78825,
+            "stddev": 45.69620737821447
+          },
+          "scenario_id": "SyncLocal-64B"
+        },
+        {
+          "budget": 400,
+          "diff_median_ns_per_op": 4681.6775,
+          "go": {
+            "count": 10,
+            "max": 6327.1625,
+            "mean": 5977.217000000001,
+            "median": 5963.3475,
+            "min": 5576.055,
+            "p95": 6327.1625,
+            "stddev": 272.92489009188347
+          },
+          "operation": "Set",
+          "payload": "1024B",
+          "ratio_median": 4.652794791170894,
+          "rust": {
+            "count": 10,
+            "max": 1327.285,
+            "mean": 1281.05725,
+            "median": 1281.67,
+            "min": 1238.58,
+            "p95": 1327.285,
+            "stddev": 32.26519440619326
+          },
+          "scenario_id": "Set-1024B"
+        },
+        {
+          "budget": 20000,
+          "diff_median_ns_per_op": 1977.2340250000002,
+          "go": {
+            "count": 10,
+            "max": 2207.8391,
+            "mean": 2173.97633,
+            "median": 2174.287925,
+            "min": 2152.2998,
+            "p95": 2207.8391,
+            "stddev": 15.79700964940662
+          },
+          "operation": "Get",
+          "payload": "1024B",
+          "ratio_median": 11.03397560261431,
+          "rust": {
+            "count": 10,
+            "max": 203.63515,
+            "mean": 197.80253,
+            "median": 197.0539,
+            "min": 195.94165,
+            "p95": 203.63515,
+            "stddev": 2.1990437206001907
+          },
+          "scenario_id": "Get-1024B"
+        },
+        {
+          "budget": 40,
+          "diff_median_ns_per_op": 47470.2875,
+          "go": {
+            "count": 10,
+            "max": 63774.6,
+            "mean": 59623.47,
+            "median": 59692.225,
+            "min": 56405.1,
+            "p95": 63774.6,
+            "stddev": 2098.297320507749
+          },
+          "operation": "Transaction",
+          "payload": "1024B",
+          "ratio_median": 4.884023093719796,
+          "rust": {
+            "count": 10,
+            "max": 13010.325,
+            "mean": 12257.49,
+            "median": 12221.9375,
+            "min": 11684.35,
+            "p95": 13010.325,
+            "stddev": 405.7038998251475
+          },
+          "scenario_id": "Transaction-1024B"
+        },
+        {
+          "budget": 400,
+          "diff_median_ns_per_op": 4637.4275,
+          "go": {
+            "count": 10,
+            "max": 11888.795,
+            "mean": 11530.26925,
+            "median": 11549.555,
+            "min": 11120.2375,
+            "p95": 11888.795,
+            "stddev": 244.98184165149559
+          },
+          "operation": "SyncLocal",
+          "payload": "1024B",
+          "ratio_median": 1.6709117417177273,
+          "rust": {
+            "count": 10,
+            "max": 7055.665,
+            "mean": 6899.93475,
+            "median": 6912.1275000000005,
+            "min": 6765.84,
+            "p95": 7055.665,
+            "stddev": 85.48884185190798
+          },
+          "scenario_id": "SyncLocal-1024B"
+        },
+        {
+          "budget": 40,
+          "diff_median_ns_per_op": 39190.762500000004,
+          "go": {
+            "count": 10,
+            "max": 52738.575,
+            "mean": 50405.105,
+            "median": 50641.412500000006,
+            "min": 45424.5,
+            "p95": 52738.575,
+            "stddev": 2128.430292192399
+          },
+          "operation": "Set",
+          "payload": "16384B",
+          "ratio_median": 4.422579722548503,
+          "rust": {
+            "count": 10,
+            "max": 12344.6,
+            "mean": 11443.2,
+            "median": 11450.65,
+            "min": 10703.325,
+            "p95": 12344.6,
+            "stddev": 486.6666869292233
+          },
+          "scenario_id": "Set-16384B"
+        },
+        {
+          "budget": 2000,
+          "diff_median_ns_per_op": 18595.2615,
+          "go": {
+            "count": 10,
+            "max": 20863.079,
+            "mean": 20554.1279,
+            "median": 20545.3775,
+            "min": 20357.8815,
+            "p95": 20863.079,
+            "stddev": 152.05680884126477
+          },
+          "operation": "Get",
+          "payload": "16384B",
+          "ratio_median": 10.535464300585195,
+          "rust": {
+            "count": 10,
+            "max": 1968.3215,
+            "mean": 1949.48165,
+            "median": 1950.116,
+            "min": 1939.446,
+            "p95": 1968.3215,
+            "stddev": 9.380737483002074
+          },
+          "scenario_id": "Get-16384B"
+        },
+        {
+          "budget": 4,
+          "diff_median_ns_per_op": 390353.375,
+          "go": {
+            "count": 10,
+            "max": 577213.25,
+            "mean": 524508.975,
+            "median": 519064.25,
+            "min": 479972.75,
+            "p95": 577213.25,
+            "stddev": 31778.036114772818
+          },
+          "operation": "Transaction",
+          "payload": "16384B",
+          "ratio_median": 4.032792489368128,
+          "rust": {
+            "count": 10,
+            "max": 156713.5,
+            "mean": 129534.55,
+            "median": 128710.875,
+            "min": 113615.25,
+            "p95": 156713.5,
+            "stddev": 14102.494361617184
+          },
+          "scenario_id": "Transaction-16384B"
+        },
+        {
+          "budget": 40,
+          "diff_median_ns_per_op": 38122.837499999994,
+          "go": {
+            "count": 10,
+            "max": 63523.875,
+            "mean": 60608.697499999995,
+            "median": 60335.212499999994,
+            "min": 58743.075,
+            "p95": 63523.875,
+            "stddev": 1721.3500857067115
+          },
+          "operation": "SyncLocal",
+          "payload": "16384B",
+          "ratio_median": 2.7162882177164756,
+          "rust": {
+            "count": 10,
+            "max": 23672.375,
+            "mean": 22333.4075,
+            "median": 22212.375,
+            "min": 21564.15,
+            "p95": 23672.375,
+            "stddev": 646.5690921929119
+          },
+          "scenario_id": "SyncLocal-16384B"
+        }
+      ],
+      "series_definition": {
+        "build_dependencies": {
+          "go-0.mod": "852fea15fa4e3f0cd3fc51c7f4293f08380c337a9910377a7ac3f4315609fe18",
+          "go-0.sum": "1ed8f87f0d6dca52501c920c3aa156f47fe5ccf418e20b70da08d67d15252d75",
+          "rust-0.lock": "f4cd6a4dfdfe78ab92f8643ec8ccf155d150621bbae25d65813a0c3734111973"
+        },
+        "build_profile": "release",
+        "contract_sha256": "8017030c6ddc5706ee68d77966419142144bbead8bf342ae78ab34f9a770d6ef",
+        "environment": {
+          "arch": "x86_64",
+          "cpu": "AMD EPYC 9R45",
+          "id": "ubicloud-ubuntu24",
+          "os": "Linux-6.14.0-1018-aws-x86_64-with-glibc2.39",
+          "runner": "Ubicloud ubuntu24; 4 logical CPUs"
+        },
+        "go": "go version go1.27.2 linux/amd64",
+        "profile": "full",
+        "protocol": "qortoo-public-api-round-mean/v1",
+        "rust_features": [
+          "observability"
+        ],
+        "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+        "source_repositories": {
+          "go": "https://github.com/qortoo/qortoo-go.git",
+          "rust": "https://github.com/qortoo/qortoo-rs.git"
+        },
+        "suite": {
+          "contract": "contracts/variable.json",
+          "id": "variable",
+          "implementations": {
+            "go": {
+              "component": "go-sdk",
+              "executable": "sdk",
+              "harness": "harnesses/go"
+            },
+            "rust": {
+              "component": "rust-sdk",
+              "executable": "variable",
+              "harness": "harnesses/rust"
+            }
+          },
+          "metric": {
+            "direction": "smaller",
+            "id": "latency",
+            "unit": "ns/op"
+          },
+          "schema_version": 1
+        },
+        "toolchains": {
+          "go": "1.27.2",
+          "rust": "1.97.1"
+        }
+      },
+      "series_id": "official/variable/6577835c52b4acb7e6194269eff9f5a0698e8c6118ab4f9878bd84537437d860",
+      "suite_id": "variable"
+    }
+  ]
+}

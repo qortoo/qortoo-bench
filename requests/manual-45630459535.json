@@ -2,8 +2,9 @@
   "active_attempt": "45630459535-1",
   "attempts": {
     "45630459535-1": {
+      "detail": "",
       "run_url": "https://github.com/qortoo/qortoo-bench/actions/runs/45630459535/attempts/1",
-      "status": "running"
+      "status": "published"
     }
   },
   "event": {
@@ -37,6 +38,7 @@
     }
   },
   "request_id": "manual-45630459535",
+  "result_run_id": "45630459535-1",
   "schema_version": 1,
-  "status": "running"
+  "status": "published"
 }
