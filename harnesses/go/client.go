@@ -15,6 +15,14 @@ func newClient() *benchClient {
 		conn.Close()
 		panic(err)
 	}
+	// Historical SDK revisions used by candidate comparisons open in NewClient.
+	if opener, ok := any(client).(interface{ Open() error }); ok {
+		if err := opener.Open(); err != nil {
+			client.Close()
+			conn.Close()
+			panic(err)
+		}
+	}
 	return &benchClient{client: client, conn: conn}
 }
 

@@ -1,4 +1,4 @@
-use qortoo::{Client, LocalConnectivity};
+use qortoo::{Client, ClientError, LocalConnectivity};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -16,8 +16,21 @@ pub struct Execution {
 pub fn new_client() -> Client {
     let connectivity = LocalConnectivity::new_arc();
     connectivity.set_realtime(false);
-    Client::builder("bench-collection", "bench-counter")
+    let client = Client::builder("bench-collection", "bench-counter")
         .with_connectivity(connectivity)
         .build()
-        .expect("client must build")
+        .expect("client must build");
+    client.open().expect("client must open");
+    client
 }
+
+// Candidate comparisons also build against SDK revisions whose build() returns a ready client.
+// On newer SDKs, the inherent Client::open method takes precedence over this fallback.
+#[allow(dead_code, reason = "used only with SDK revisions before Client::open")]
+trait LegacyClientOpen {
+    fn open(&self) -> Result<(), ClientError> {
+        Ok(())
+    }
+}
+
+impl LegacyClientOpen for Client {}
